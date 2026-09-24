@@ -36,6 +36,6 @@ Tests are structured with fast failing assertions (`--tb=short`, `-q`), avoiding
 ### 4. The Inverted Cost Frontier: Empirical Context
 Standard dogma holds that multi-agent systems incur a heavy token tax (typically 5x–7x the cost of a single agent). CaveAgents v4 significantly reduces this overhead:
 - Standard Teamwork (Live 3-Agent Run): **143,219 tokens**
-- CaveAgents v4 Multi-Agent Parallel (Live 3-Agent Run): **26,784 tokens** (81.3% reduction vs Standard Teamwork)
+- CaveAgents v4 Multi-Agent (Live 3-Agent Sequential TDD Run): **26,784 tokens** (81.3% reduction vs Standard Teamwork)
 - Standard Monolithic Agent (Unpruned, 16 Tools): **30,241 tokens** (v4 is 11.4% cheaper)
-- Caveman Monolithic Agent (Terse, 16 Tools): **16,285 tokens** (~39% cheaper than v4, paying zero multi-agent coordination overhead on small tasks)
+- Caveman Monolithic Agent (Terse, 16 Tools): **16,285 tokens** (~39% cheaper than v4; a pruned monolith is estimated at ~4–5k tokens, roughly 5x–6x cheaper than v4 due to zero coordination tax on small tasks)

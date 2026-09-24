@@ -32,15 +32,15 @@ Activate CaveAgents v4 mode:
 
 ## Core Agent Roles
 
-Detailed definitions in [references/roles.md](skills/caveagents/references/roles.md):
+Detailed definitions in [references/roles.md](references/roles.md):
 - **Captain (`cave_captain`)**: High-level planner, DAG decomposition, worker lifecycle manager, quality gate enforcer. Never conducts low-level file edits.
 - **Worker (`cave_worker`)**: Autonomous implementer. Receives scoped inScope files, executes exact terminal commands, writes code, runs test suites.
 - **Reviewer / Verifier (`cave_verifier`)**: Independent validation subagent. Audits test coverage, benchmarks token overhead, enforces AST/lint standards.
 
 ## Reference Specifications
 
-- [Architecture Reference](docs/ARCHITECTURE.md)
-- [Version 1: Serial Pipeline](skills/caveagents/references/CAVEAGENTS_V1.md)
-- [Version 2: Clones & P2P Direct Comms](skills/caveagents/references/CAVEAGENTS_V2.md)
-- [Version 3: Pre-Flight Bound](skills/caveagents/references/CAVEAGENTS_V3.md)
-- [Version 4: Dynamic Tool Pruning & Inverted Frontier](skills/caveagents/references/CAVEAGENTS_V4.md)
+- [Architecture Reference](../../docs/ARCHITECTURE.md)
+- [Version 1: Serial Pipeline](references/CAVEAGENTS_V1.md)
+- [Version 2: Clones & P2P Direct Comms](references/CAVEAGENTS_V2.md)
+- [Version 3: Pre-Flight Bound](references/CAVEAGENTS_V3.md)
+- [Version 4: Dynamic Tool Pruning](references/CAVEAGENTS_V4.md)

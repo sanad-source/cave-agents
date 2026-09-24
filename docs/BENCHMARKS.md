@@ -2,9 +2,9 @@
 
 ## Overview
 
-This document presents empirical results and benchmark evaluation data measuring total token usage across multiple agent frameworks and configurations performing an identical full-stack Python refactoring task.
+This document presents empirical results and benchmark evaluation data measuring total token usage across multiple agent frameworks and configurations performing an identical Python rate limiter implementation and concurrency test task (`TokenBucket`).
 
-All benchmarks were evaluated under identical task scopes, repository environments, test harness conditions, and model foundations (`gemini-2.5-pro` / `cl100k_base` accounting).
+All benchmarks were evaluated under identical task scopes, repository environments, test harness conditions, and model foundations (Google Gemini 3.8 Flash, with offline `tiktoken cl100k_base` accounting).
 
 ---
 
@@ -58,21 +58,24 @@ CaveAgents v4 demonstrates that when tool schemas are pruned dynamically and ASD
 $$\text{Cost}(\text{CaveAgents v4}) = 26{,}784 < 30{,}241 = \text{Cost}(\text{Standard Mono})$$
 
 ### Crucial Baseline Caveat & Experimental Control
-While CaveAgents v4 operates at a lower token cost than an unpruned, verbose single agent (30,241 tokens), **a single agent with terse prompting (Caveman Mono) consumes only 16,285 tokens**—approximately 39% lower than CaveAgents v4.
+While CaveAgents v4 operates at a lower token cost than an unpruned, verbose single agent (30,241 tokens), **an unpruned single agent with terse prompting (Caveman Mono) consumes only 16,285 tokens**—approximately 39% lower than CaveAgents v4.
 
-This disparity underscores two fundamental systems principles:
-1. **Tool Pruning is Orthogonal**: Dynamic tool pruning is a general lever that reduces token consumption in both single-agent and multi-agent systems. If applied to a single agent, the monolith's token usage drops even lower.
+Furthermore, if the single agent is equipped with the exact same 5-tool pruned registry (~740 tokens/step across ~6 steps ≈ 4–5k tokens), **a pruned monolith is estimated to be roughly 5x–6x cheaper than CaveAgents v4**. 
+
+This disparity underscores fundamental systems principles:
+1. **Tool Pruning is Orthogonal**: Dynamic tool pruning is a general lever that reduces token consumption in both single-agent and multi-agent systems. When applied to a single agent, it achieves the lowest absolute cost.
 2. **Coordination Overhead on Small Tasks**: On small, single-component tasks (such as a single 91-line rate limiter class), monolithic execution incurs zero inter-agent communication, zero handoffs, and zero duplicate context loading. Multi-agent teams only demonstrate structural efficiency advantages when tasks exceed single-context boundaries or require parallel execution across independent repositories.
+3. **Prompt Caching Economics**: In real-world API billing, static tool schemas reside in the system prompt prefix and are subject to server-side prompt caching (typically billed at a 75%–80% discount for cache hits in Google Gemini and Anthropic). Therefore, pruning static tool schemas saves far more raw un-cached tokens on paper than it saves in actual billing dollars.
 
 ---
 
 ## 🔬 Limitations & Threats to Validity
 
-1. **Micro-Task Scope & Sample Size ($n=1$)**: The benchmark is evaluated on a single run of a 91-line Python rate limiter. Model sampling variance was not statistically bounded. On small tasks, single agents naturally have an advantage because coordination costs cannot be amortized.
-2. **Asymmetric Tool Baseline**: The Standard Monolith baseline carried all 16 tools declared (~2,480 schema tokens/turn). A pruned-tool monolith control was not evaluated and would achieve even lower token counts than Caveman Mono.
-3. **Tokenizer Approximation**: Accounting utilized offline BPE tokenization (`tiktoken cl100k_base`), which models token volume rather than exact Google Gemini API billing metadata or server-side prompt caching discounts.
+1. **Accounting Assumptions & Built-In Schema Constants**: The reported token breakdowns use offline `tiktoken` accounting where tool schema costs were modeled by adding fixed schema size estimates (~2,480 vs ~380 tokens) multiplied by turn counts, rather than extracting live API response metadata. Furthermore, counting per-turn transcript entries underestimates cumulative conversational history re-sent on each API request. Real-world API billing metadata must replace these estimates.
+2. **Micro-Task Scope & Sample Size ($n=1$)**: The benchmark is evaluated on a single run of a 91-line Python rate limiter. Model sampling variance was not statistically bounded. On small tasks, single agents naturally have an advantage because coordination costs cannot be amortized.
+3. **Execution Topology (Serial Pipeline)**: On this single-component task, the team executed sequentially (QA → Coder → Reviewer) rather than in parallel. Parallel multi-agent execution only occurs when a task DAG contains independent, non-blocking subtasks.
 4. **Held-Out Quality Evaluation**: Code correctness was verified against tests authored by an LLM in the same loop rather than an independent held-out benchmark suite (e.g., SWE-bench, HumanEval) or human expert review.
-5. **Confounded Ablations**: Versions v1–v4 varied prompt style, DAG topology, context scoping, and tool schemas concurrently. Tool schema pruning accounts for the vast majority (~80-85%) of observed input token savings.
+5. **Inferred Savings vs. Empirical Ablation**: Attributing ~80%–85% of savings to tool pruning and ~10%–15% to terseness was an analytical inference based on schema sizes, not an isolated single-variable empirical ablation.
 
 ---
 

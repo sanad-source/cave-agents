@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Framework: Any Agent](https://img.shields.io/badge/Framework-Any%20Agent-8b5cf6.svg)](https://github.com/sanad-source/cave-agents)
 [![Tested On](https://img.shields.io/badge/Tested%20On-Antigravity%20(Gemini%203.8%20Flash)-f97316.svg)](docs/BENCHMARKS.md)
-[![Token Savings](https://img.shields.io/badge/Token%20Savings-Up%20to%2087%25-22c55e.svg)](docs/BENCHMARKS.md)  
+[![Token Reduction](https://img.shields.io/badge/Token%20Reduction--81%25%20vs%20Teamwork-22c55e.svg)](docs/BENCHMARKS.md)  
 [![Inspired By](https://img.shields.io/badge/Inspired%20By-NanmiCoder%2Fdsh--agent--teams-800080.svg)](https://github.com/NanmiCoder/dsh-agent-teams)
 [![Caveman Mode](https://img.shields.io/badge/Caveman-JuliusBrussee%2Fcaveman-181717.svg?logo=github)](https://github.com/JuliusBrussee/caveman)
 [![Tests Passing](https://img.shields.io/badge/Tests-5%2F5%20Passing-10b981.svg)](tests/)
@@ -14,7 +14,7 @@ Multi-agent software engineering workflows typically incur an 80%–85% token pe
 
 **CaveAgents** is an orchestration framework designed to minimize multi-agent coordination overhead through **dynamic tool registry pruning**, **strict context scoping**, and **direct peer-to-peer messaging**.
 
-In benchmark evaluations on a Python rate-limiter task, CaveAgents v4 completes a full 3-agent TDD cycle (QA, Implementation, Code Review) in **26,784 tokens**—an **81.3% reduction** compared to standard unpruned multi-agent workflows (143,219 tokens).
+In benchmark evaluations on a Python rate-limiter task (`TokenBucket`), CaveAgents v4 completes a full 3-agent TDD cycle (QA, Implementation, Code Review) in **26,784 tokens**—an **81.3% reduction** compared to standard unpruned multi-agent workflows (143,219 tokens).
 
 > **Control Baseline Note**: On small tasks, an optimized single agent remains significantly cheaper (**16,285 tokens**, ~39% lower) because it pays zero coordination overhead. Tool pruning is a general-purpose optimization that benefits both single agents and teams; multi-agent architectures offer structural value primarily when task scale requires isolated context domains or parallel code generation.
 
@@ -22,12 +22,12 @@ In benchmark evaluations on a Python rate-limiter task, CaveAgents v4 completes 
 
 ## 📊 Benchmarks
 
-The following empirical benchmark measures total token expenditure on an identical multi-file Python refactoring and verification task:
+The following empirical benchmark measures total token expenditure on a Python rate limiter class with concurrency test suite (`TokenBucket`):
 
 | Configuration / Architecture | Total Billed Tokens | vs Standard Mono | Multi-Agent Coordination | Description |
 | :--- | :---: | :---: | :---: | :--- |
 | **Caveman Mono** | **16,285** | -46.1% | None (1 Agent) | 🥇 Lowest absolute tokens (single terse agent) |
-| **CaveAgents v4** | **26,784** | **-11.4%** | **3-Agent Team** | **🏆 Lowest multi-agent (Cheaper than Standard Mono)** |
+| **CaveAgents v4** | **26,784** | **-11.4%** | **3-Agent Team** | Optimized multi-agent team (-81.3% vs Teamwork) |
 | **Standard Mono** | 30,241 | Baseline | None (1 Agent) | Single agent (verbose baseline) |
 | **CaveAgents v3** | 50,395 | +66.6% | 3-Agent Team | Pre-Flight bound execution strings |
 | **CaveAgents v2** | 91,432 | +202.3% | 3-Agent Team | Cloned coders + direct P2P messaging |
@@ -37,11 +37,11 @@ The following empirical benchmark measures total token expenditure on an identic
 
 > **Experimental Control & Scope Note**:
 > - **Multi-Agent Efficiency**: CaveAgents v4 reduces multi-agent coordination cost down to **26,784 tokens** (-81.3% vs Standard Teamwork at 143k tokens), reaching parity with an unpruned single agent (`30,241 tokens`).
-> - **Monolith Parity on Small Tasks**: An optimized single agent (**16,285 tokens**) is still **~39% cheaper** than CaveAgents v4 on this micro-task because a single agent incurs zero multi-agent communication or handoff overhead.
-> - **Control Baseline**: Tool pruning is an orthogonal lever. Applying tool pruning to a monolith would lower its cost even further. Teams become advantageous when tasks exceed a single context window or require parallel code generation across independent modules.
+> - **Monolith Parity & The Pruned Control Gap**: An unpruned single agent with terse prompting (**Caveman Mono**) consumed **16,285 tokens** (~39% cheaper than v4). If the single agent had received the same 5-tool pruned registry (~740 tokens/step across ~6 steps ≈ 4–5k tokens), a pruned monolith is estimated to be **5x–6x cheaper** than v4. Multi-agent teams pay coordination, tool re-initialization, and handoff overhead on every boundary, which micro-tasks cannot amortize.
+> - **When Teams Matter**: Teams become advantageous when tasks exceed a single context window or require parallel code generation across independent architectural modules.
 
 <p align="center">
-  <img src="assets/chart_tokens.png" alt="CaveAgents Inverted Cost Frontier" width="100%"/>
+  <img src="assets/chart_tokens.png" alt="CaveAgents Benchmark Comparison" width="100%"/>
 </p>
 
 Detailed transcript GUIDs and per-turn token breakdowns are documented in [docs/BENCHMARKS.md](docs/BENCHMARKS.md).
@@ -152,25 +152,27 @@ print(summary)
 
 ## 🔬 Limitations & Threats to Validity
 
-1. **Sample Size ($n=1$) & Task Scope**: The current benchmark reflects a single evaluation on an isolated micro-task (a 91-line Python rate limiter class). Variance from stochastic LLM sampling was not characterized across multi-trial distributions. On micro-tasks, monolithic execution inherently holds an advantage because coordination overhead cannot be amortized across file boundaries.
-2. **Asymmetric Tool Baseline**: The Standard Monolith baseline operated with all 16 tools declared (~2,480 schema tokens/turn). Because dynamic tool pruning is orthogonal to team architecture, applying tool pruning to a monolith reduces its token usage even further (as shown by Caveman Mono at 16,285 tokens). The honest comparison is not "teams are cheaper than single agents," but rather "tool pruning enables multi-agent coordination with only modest overhead relative to an unoptimized single agent."
-3. **Tokenizer Approximation vs. Billed Usage**: Token counts were measured offline using `tiktoken` (`cl100k_base`) on raw transcript text. This models OpenAI-equivalent token volume rather than exact Google Gemini API billing metadata, SentencePiece tokenization, or server-side prompt caching discounts.
-4. **Held-Out Quality Evaluation**: Correctness was verified using a test suite authored by an agent in the same model family, without an independent, held-out benchmark suite (e.g., SWE-bench, HumanEval) or human code review. The reviewer subagent's defect-catch rate was not quantitatively isolated.
-5. **Confounded Ablation (v1–v4)**: Historical versions varied prompt terseness, network topology, context scoping, and tool schemas concurrently. Empirical analysis shows that **Dynamic Tool Pruning accounts for ~80%–85% of total token reductions**, while ASD-STE100 output terseness contributes ~10%–15% (since output tokens comprise only ~12% of total expenditure).
+1. **Accounting Assumptions & Built-In Schema Constants**: The reported token breakdowns use offline `tiktoken` accounting where tool schema costs were modeled by adding fixed schema size estimates (~2,480 vs ~380 tokens) multiplied by turn counts, rather than extracting live API response metadata. Furthermore, counting per-turn transcript entries underestimates cumulative conversational history re-sent on each API request. Real-world API billing metadata must replace these estimates.
+2. **Asymmetric Baseline & The Pruned Monolith Gap**: The Standard Monolith baseline operated with all 16 tools declared (~2,480 schema tokens/turn). Caveman Mono completed the task in ~6 steps at 16,285 tokens while carrying the full unpruned registry. If a single agent is equipped with the same 5-tool pruned registry (~740 tokens/step across ~6 steps ≈ 4–5k tokens), a pruned monolith is estimated to be **roughly 5x–6x cheaper** than CaveAgents v4. Multi-agent teams pay coordination, tool re-initialization, and handoff overhead on every boundary, which micro-tasks cannot amortize.
+3. **Prompt Caching Economics**: In real-world API billing, static tool schemas reside in the system prompt prefix and are subject to server-side prompt caching (typically billed at a 75%–80% discount for cache hits in Google Gemini and Anthropic). Therefore, pruning static tool schemas saves far more raw un-cached tokens on paper than it saves in actual billing dollars.
+4. **Sample Size ($n=1$) & Micro-Task Scope**: The current benchmark reflects a single evaluation on an isolated micro-task (a 91-line Python rate limiter class). Variance from stochastic LLM sampling was not characterized across multi-trial distributions.
+5. **Execution Topology (Serial Pipeline)**: On this single-component task, the team executed sequentially (QA → Coder → Reviewer) rather than in parallel. Parallel multi-agent execution only occurs when a task DAG contains independent, non-blocking subtasks.
+6. **Held-Out Quality Evaluation**: Correctness was verified using a test suite authored by an agent in the same model family, without an independent, held-out benchmark suite (e.g., SWE-bench, HumanEval) or human code review. The reviewer subagent's defect-catch rate was not quantitatively isolated.
+7. **Inferred Savings vs. Empirical Ablation**: Attributing ~80%–85% of savings to tool pruning and ~10%–15% to terseness was an analytical inference based on schema sizes, not an isolated single-variable empirical ablation.
 
 ---
 
 ## 🗺️ Future Work & Research Roadmap
 
-- [ ] **Pruned-Tool Monolith Control**: Benchmark a single-agent monolith equipped with the exact same 5-tool pruned registry as the control.
+- [ ] **Pruned-Tool Monolith Control**: Benchmark a single-agent monolith equipped with the exact same 5-tool pruned registry as the control to measure the true coordination tax.
+- [ ] **Native API Billing Telemetry**: Extract exact billed input, output, and cached token metadata directly from Gemini API response headers.
 - [ ] **Statistical Power ($n \ge 10$)**: Run 10+ randomized trials per arm across varying temperatures to establish confidence intervals and variance bounds.
 - [ ] **Multi-Scale Task Evaluation**: Benchmark across 4 distinct task tiers:
   - *Tier 1 (Micro)*: Single-class algorithmic component (TokenBucket).
   - *Tier 2 (Medium)*: Multi-file service with database migrations and HTTP endpoints.
   - *Tier 3 (Large)*: Cross-package refactoring with extensive dependencies.
   - *Tier 4 (Heterogeneous)*: Full-stack application with frontend UI, backend API, and unit tests.
-- [ ] **Native API Billing Telemetry**: Extract exact billed token metadata, cache read/write ratios, and latency directly from Gemini API response headers.
-- [ ] **Independent Held-Out Testing**: Evaluate functional correctness against hidden test suites, mutation coverage, and security static analysis.
+- [ ] **Independent Held-Out Testing**: Evaluate functional correctness against hidden test suites, mutation coverage, and security static analysis to measure if the reviewer stage catches real defects.
 
 ---
 
