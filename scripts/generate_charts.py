@@ -50,13 +50,11 @@ def generate_benchmark_chart() -> Path:
     ax.set_yticklabels(configs, fontsize=10.5)
 
     ax.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda x, p: f"{int(x):,}"))
-    ax.axvline(30241, color="#f59e0b", linestyle="--", linewidth=1.5, label="Standard Mono Baseline (30,241 tokens)")
 
     for bar, val in zip(bars, tokens):
         w = bar.get_width()
         ax.text(w + 2500, bar.get_y() + bar.get_height() / 2, f"{val:,}", va="center", ha="left", fontsize=10, fontweight="bold", color="#1e293b")
 
-    ax.legend(loc="lower right", framealpha=0.95, fontsize=10)
     ax.set_xlim(0, 185000)
     plt.tight_layout()
 
