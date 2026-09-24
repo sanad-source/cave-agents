@@ -1,14 +1,14 @@
-# Empirical Benchmark & Token Usage Analysis
+# Benchmarks
 
-## Empirical Results Overview
+## Overview
 
-This document presents empirical benchmark evaluation data measuring total token usage across multiple agent frameworks and configurations performing an identical full-stack Python refactoring task.
+This document presents empirical results and benchmark evaluation data measuring total token usage across multiple agent frameworks and configurations performing an identical full-stack Python refactoring task.
 
 All benchmarks were evaluated under identical task scopes, repository environments, test harness conditions, and model foundations (`gemini-2.5-pro` / `cl100k_base` accounting).
 
 ---
 
-## Benchmark Comparison Table
+## Results Table
 
 | Architecture / Framework | Real Transcript / Run GUID | Input Tokens | Output Tokens | Total Token Usage | vs Teamwork Baseline | vs Standard Mono |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: |
@@ -23,7 +23,7 @@ All benchmarks were evaluated under identical task scopes, repository environmen
 
 ---
 
-## Dual Context Accounting Breakdown
+## Token Breakdown
 
 In multi-agent systems, token consumption is divided into two primary categories:
 1. **Tool Declaration Schema Tokens**: The fixed cost incurred on every turn by providing the model with JSON tool schemas.

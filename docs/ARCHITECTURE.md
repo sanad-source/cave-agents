@@ -1,6 +1,6 @@
-# CaveAgents Architecture & Design Specification
+# Architecture
 
-## Architecture Overview
+## Overview
 
 CaveAgents implements an ultra-lean multi-agent orchestration architecture engineered specifically to eliminate the multi-agent token tax. The architecture balances strict supervisory control with decentralized peer-to-peer execution.
 

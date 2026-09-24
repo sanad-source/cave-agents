@@ -1,6 +1,6 @@
 # CaveAgents
 
-## Executive Summary
+## Summary
 
 Traditional multi-agent orchestration frameworks impose a heavy **Multi-Agent Token Tax**—routinely incurring a 5x–7x token penalty compared to single-agent workflows. This overhead is driven by redundant conversational fluff, bloated tool schema declarations injected on every turn, and unconstrained context window replication.
 
@@ -8,7 +8,7 @@ Traditional multi-agent orchestration frameworks impose a heavy **Multi-Agent To
 
 ---
 
-## Benchmark & Empirical Results
+## Benchmarks
 
 The following empirical benchmark measures total token expenditure on an identical multi-file Python refactoring and verification task:
 
@@ -53,7 +53,7 @@ graph TD
     Captain --> Client
 ```
 
-### Key Pillars
+### Core Ideas
 
 1. **Dynamic Tool Registry Pruning**: Rather than injecting 15–20 tool schemas on every step (~2,500 tokens/turn), `define_subagent` registers only the exact 5 tools required by each worker. This saves ~2,100–2,500 tokens on every step turn.
 2. **P2P Direct Messaging**: Workers coordinate directly without proxying chatter through the supervisor's context.
@@ -65,7 +65,7 @@ For comprehensive architectural specifications, see [docs/ARCHITECTURE.md](docs/
 
 ---
 
-## Evolution: v1 to v4
+## Versions
 
 - **v1 (Serial Pipeline - 109,984 tokens)**: Combined Caveman prompting with serial agent handoffs. Centralized Captain routing created a relay bottleneck.
 - **v2 (Clones + P2P - 91,432 tokens)**: Introduced concurrent worker clones and direct peer-to-peer messaging, eliminating Captain relay overhead.
@@ -78,7 +78,7 @@ Detailed changelogs are available in [docs/VERSIONS.md](docs/VERSIONS.md).
 
 ## Quickstart
 
-### 1. Installation
+### 1. Install
 
 Install the Python package locally in editable mode:
 
@@ -88,7 +88,7 @@ cd cave-agents
 pip install -e .
 ```
 
-### 2. CLI Usage
+### 2. CLI
 
 Display the empirical benchmark table:
 
@@ -129,7 +129,7 @@ print(summary)
 
 ---
 
-## Skill Installation Instructions
+## Install as a Skill
 
 To install and enable CaveAgents as a persistent agent skill:
 

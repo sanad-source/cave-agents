@@ -1,6 +1,6 @@
-# Inspiration & Theoretical Foundations
+# Inspiration
 
-## Origin Story: The Multi-Agent Paradox
+## Origin Story
 
 Multi-agent architectures promised modular problem decomposition, parallel task execution, and specialized domain expertise. In practice, however, early multi-agent frameworks suffered from a devastating limitation: **The Multi-Agent Token Tax**.
 
@@ -18,7 +18,7 @@ This token explosion was driven by three compounding structural inefficiencies:
 
 ---
 
-## The Caveman Philosophy: Micro-Efficiency
+## Caveman Mode
 
 The antidote to conversational bloat emerged from **Caveman Mode**—an ultra-terse prompt constraint inspired by Simplified Technical English (**ASD-STE100**). In Caveman mode:
 - All filler words, conversational greetings, and pleasantries are eliminated.
@@ -31,7 +31,7 @@ However, a single monolithic agent is inherently bounded: it cannot execute task
 
 ---
 
-## Merging Macro-Architecture and Micro-Efficiency
+## Putting It Together
 
 CaveAgents was born from a fundamental synthesis:
 - **Macro-Architecture**: Robust Directed Acyclic Graph (DAG) task orchestration, parallel subagent execution, and automated TDD quality gates (derived from systems like AgentTeams).

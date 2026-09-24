@@ -1,10 +1,10 @@
-# Version History & Architectural Evolution
+# Versions
 
-This document tracks the iterative development of CaveAgents from early centralized prototypes to the high-efficiency v4 architecture.
+This document tracks the version history of CaveAgents from early centralized prototypes to the high-efficiency v4 architecture.
 
 ---
 
-## Evolution Summary Matrix
+## Comparison
 
 | Version | Core Architecture | Coordination Mechanism | Tool Registry | Benchmark Tokens | vs Teamwork Baseline |
 | :--- | :--- | :--- | :--- | :---: | :---: |
@@ -19,7 +19,7 @@ This document tracks the iterative development of CaveAgents from early centrali
 
 ---
 
-## Detailed Version Changelog
+## Changelog
 
 ### Version 1: Serial Pipeline (`v1`)
 - **Released**: Initial proof-of-concept.
