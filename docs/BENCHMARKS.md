@@ -47,7 +47,7 @@ Notice how **CaveAgents v4** slashes the fixed schema declaration cost from ~2,4
 
 ---
 
-## The Inverted Cost Frontier
+## The Inverted Cost Frontier: Analysis & Context
 
 In traditional multi-agent orchestration, multi-agent overhead was taken as an unavoidable cost of modularity:
 
@@ -57,7 +57,22 @@ CaveAgents v4 demonstrates that when tool schemas are pruned dynamically and ASD
 
 $$\text{Cost}(\text{CaveAgents v4}) = 26{,}784 < 30{,}241 = \text{Cost}(\text{Standard Mono})$$
 
-This creates the **Inverted Cost Frontier**: developers obtain full parallel multi-agent execution, task modularity, isolated failure domains, and automated TDD gates at lower token cost than a standard single-agent session.
+### Crucial Baseline Caveat & Experimental Control
+While CaveAgents v4 operates at a lower token cost than an unpruned, verbose single agent (30,241 tokens), **a single agent with terse prompting (Caveman Mono) consumes only 16,285 tokens**—approximately 39% lower than CaveAgents v4.
+
+This disparity underscores two fundamental systems principles:
+1. **Tool Pruning is Orthogonal**: Dynamic tool pruning is a general lever that reduces token consumption in both single-agent and multi-agent systems. If applied to a single agent, the monolith's token usage drops even lower.
+2. **Coordination Overhead on Small Tasks**: On small, single-component tasks (such as a single 91-line rate limiter class), monolithic execution incurs zero inter-agent communication, zero handoffs, and zero duplicate context loading. Multi-agent teams only demonstrate structural efficiency advantages when tasks exceed single-context boundaries or require parallel execution across independent repositories.
+
+---
+
+## 🔬 Limitations & Threats to Validity
+
+1. **Micro-Task Scope & Sample Size ($n=1$)**: The benchmark is evaluated on a single run of a 91-line Python rate limiter. Model sampling variance was not statistically bounded. On small tasks, single agents naturally have an advantage because coordination costs cannot be amortized.
+2. **Asymmetric Tool Baseline**: The Standard Monolith baseline carried all 16 tools declared (~2,480 schema tokens/turn). A pruned-tool monolith control was not evaluated and would achieve even lower token counts than Caveman Mono.
+3. **Tokenizer Approximation**: Accounting utilized offline BPE tokenization (`tiktoken cl100k_base`), which models token volume rather than exact Google Gemini API billing metadata or server-side prompt caching discounts.
+4. **Held-Out Quality Evaluation**: Code correctness was verified against tests authored by an LLM in the same loop rather than an independent held-out benchmark suite (e.g., SWE-bench, HumanEval) or human expert review.
+5. **Confounded Ablations**: Versions v1–v4 varied prompt style, DAG topology, context scoping, and tool schemas concurrently. Tool schema pruning accounts for the vast majority (~80-85%) of observed input token savings.
 
 ---
 

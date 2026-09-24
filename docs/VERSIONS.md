@@ -6,16 +6,16 @@ This document tracks the version history of CaveAgents from early centralized pr
 
 ## Comparison
 
-| Version | Core Architecture | Coordination Mechanism | Tool Registry | Benchmark Tokens | vs Teamwork Baseline |
+| Version | Core Architecture | Coordination Mechanism | Tool Registry | Benchmark Tokens | vs Teamwork Live |
 | :--- | :--- | :--- | :--- | :---: | :---: |
-| **Teamwork Baseline** | Star Mesh | Unconstrained Conversational | Static (Full Catalog) | 208,555 | 0.0% |
-| **AgentTeams Baseline** | Centralized DAG | Structured Conversational | Static (Full Catalog) | 154,998 | -25.7% |
-| **v1** | Serial Pipeline | Centralized Captain Relay | Static (Full Catalog) | 109,984 | -47.3% |
-| **v2** | Clones + P2P | Direct Peer-to-Peer Messaging | Static (Full Catalog) | 91,432 | -56.2% |
-| **v3** | Pre-Flight Bound | P2P + Scoped Context Injection | Static (Full Catalog) | 50,395 | -75.8% |
-| **Standard Mono Baseline** | Single Agent | N/A (Monolithic Turn-by-Turn) | Static (Full Catalog) | 30,241 | -85.5% |
-| **v4 (Current)** | Dynamic Tool Pruning | P2P + Inverted Cost Frontier | Dynamic Role-Pruned Registry | **26,784** | **-87.2%** |
-| **Caveman Mono Baseline** | Single Agent | N/A (Terse Prompting) | Static (Full Catalog) | 16,285 | -92.2% |
+| **Standard Teamwork (Live)** | Star Mesh | Unconstrained Conversational | Static (16 Tools) | 143,219 | Baseline |
+| **AgentTeams Baseline** | Centralized DAG | Structured Conversational | Static (16 Tools) | 154,998 | +8.2% |
+| **v1** | Serial Pipeline | Centralized Captain Relay | Static (16 Tools) | 109,984 | -23.2% |
+| **v2** | Clones + P2P | Direct Peer-to-Peer Messaging | Static (16 Tools) | 91,432 | -36.2% |
+| **v3** | Pre-Flight Bound | P2P + Scoped Context Injection | Static (16 Tools) | 50,395 | -64.8% |
+| **Standard Mono Baseline** | Single Agent | N/A (Monolithic Turn-by-Turn) | Static (16 Tools) | 30,241 | -78.9% |
+| **v4 (Current)** | Dynamic Tool Pruning | P2P + Inverted Cost Frontier | Dynamic Role-Pruned (5 Tools) | **26,784** | **-81.3%** |
+| **Caveman Mono Baseline** | Single Agent | N/A (Terse Prompting) | Static (16 Tools) | 16,285 | -88.6% |
 
 ---
 
@@ -56,8 +56,8 @@ This document tracks the version history of CaveAgents from early centralized pr
 - **Released**: State-of-the-art production engine.
 - **Topology**: Dynamic tool-pruned worker DAG with autonomous inspection and compound verifications.
 - **Key Changes**:
-  - **Dynamic Tool Pruning**: Defined subagents with role-specific tool subsets via `define_subagent`. Dropped unused tools (e.g. web search, browsers, image generators, notebooks), saving ~2,500 tokens per tool call turn.
+  - **Dynamic Tool Pruning**: Defined subagents with role-specific tool subsets via `define_subagent`. Dropped unused tools (e.g. web search, browsers, image generators, notebooks), reducing per-turn tool schema injection from ~2,480 down to ~380 tokens (~2,100 tokens saved per turn).
   - **Autonomous Inspection**: Subagents perform surgical symbol lookups rather than consuming upfront bulk context.
   - **Compound Verifications**: Multi-layer hermetic test validation ensuring zero regressions.
-  - **Inverted Cost Frontier**: Total multi-agent token expenditure reached **26,784 tokens**—achieving parallel multi-agent execution at a lower token cost than a standard monolithic single agent (**30,241 tokens**).
-- **Token Result**: **26,784 tokens** (87.2% reduction vs Teamwork baseline).
+  - **Inverted Cost Frontier**: Total multi-agent token expenditure reached **26,784 tokens**—achieving parallel multi-agent execution with lower token consumption than an unpruned monolithic single agent (**30,241 tokens**). On small tasks, an optimized single agent with terse prompting still achieves **16,285 tokens** due to zero coordination tax.
+- **Token Result**: **26,784 tokens** (81.3% reduction vs Standard Teamwork Live run at 143,219 tokens).
