@@ -46,7 +46,6 @@ def generate_benchmark_chart() -> Path:
 
     ax.invert_yaxis()
     ax.set_xlabel("Total Billed Tokens (Identical TokenBucket Task)", fontsize=12, fontweight="bold", labelpad=10)
-    ax.set_title("Live Token Expenditure Across 8 AI Architectures\n(100% Measured from Untruncated Transcripts on Disk)", fontsize=14, fontweight="bold", pad=15)
     ax.set_yticks(y_pos)
     ax.set_yticklabels(configs, fontsize=10.5)
 
