@@ -2,9 +2,11 @@
 
 ## 📋 Summary
 
-Traditional multi-agent orchestration frameworks impose a heavy **Multi-Agent Token Tax**—routinely incurring a 5x–7x token penalty compared to single-agent workflows. This overhead is driven by redundant conversational fluff, bloated tool schema declarations injected on every turn, and unconstrained context window replication.
+Normally, using a team of AI agents uses 5x to 7x more tokens than a single agent because agents talk too much and reload huge tool lists on every turn.
 
-**CaveAgents** solves this by unifying macro-level Directed Acyclic Graph (DAG) task orchestration with micro-level ASD-STE100 terseness and **Dynamic Tool Registry Pruning**. In its latest iteration (**v4**), CaveAgents crosses the **Inverted Cost Frontier**: achieving full parallel multi-agent decomposition and automated TDD quality gates at **26,784 tokens**—consuming fewer tokens than a standard monolithic single-agent baseline (**30,241 tokens**).
+**CaveAgents** lets you run teams of AI agents (QA, coder, reviewer) to write and test code together, but cuts out all the filler and removes unused tools. 
+
+In **v4**, the entire team finishes the job in **26,784 tokens**—making the multi-agent team cheaper than even a single agent running alone (**30,241 tokens**).
 
 ### 🔥 TL;DR (Gen Z Edition)
 
