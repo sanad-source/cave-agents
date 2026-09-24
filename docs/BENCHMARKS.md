@@ -66,7 +66,11 @@ However, strict experimental control reveals that **this inversion was driven en
 3. **Quality vs. Overhead**: While both the Pruned Monolith and CaveAgents v4 achieved 100% correctness (7/7) on the held-out test suite (outperforming Standard Teamwork which failed 2 tests), the 3-agent team paid 135% coordination overhead without increasing correctness on a single-file module.
 
 ### Core Systems Principles
-1. **Tool Pruning is Orthogonal**: Dynamic tool pruning is a universal efficiency lever. When applied to single agents, it drops cost from 30.2k down to 11.4k (-62.4%). When applied to multi-agent teams, it drops cost from 143.2k down to 26.8k (-81.3%).
+1. **Isolating Tool Pruning vs. Prompt Terseness**: The levers must be evaluated like-for-like to avoid conflating variables:
+   - *Single Agent Clean Pruning Effect*: Caveman Mono (16,285, terse, 16 tools) → Pruned Mono Control (11,381, terse, 5 tools) = **−30.1% reduction** directly attributable to schema pruning.
+   - *Single Agent Clean Terseness Effect*: Standard Mono (30,241, verbose, 16 tools) → Caveman Mono (16,285, terse, 16 tools) = **−46.1% reduction** from concise prompting.
+   - *Multi-Agent Clean Pruning Effect*: CaveAgents v3 (50,395, terse, 16 tools) → CaveAgents v4 (26,784, terse, 5 tools) = **−46.8% reduction** directly from schema pruning in teams.
+   - *Aggregate Multi-Agent Reduction*: Standard Teamwork (143,219, verbose, 16 tools) → CaveAgents v4 (26,784, terse, 5 tools) = **−81.3% reduction**, compounding tool pruning, terse wire communications, and strict pre-flight scope bounds.
 2. **Coordination Overhead on Small Tasks**: On micro-tasks (like a 91-line rate limiter), single agents have zero inter-agent handoffs, zero duplicate context loading, and zero supervisor routing. Multi-agent teams only amortize this overhead when tasks exceed a single context window or require parallel code generation across decoupled submodules.
 3. **Prompt Caching Economics**: In real-world API billing, static tool schemas reside in the system prompt prefix and are subject to server-side prompt caching (typically billed at a 75%–80% discount for cache hits in Gemini and Anthropic). Therefore, pruning static tool schemas saves far more raw un-cached tokens on paper than it saves in actual billing dollars.
 
@@ -77,12 +81,12 @@ However, strict experimental control reveals that **this inversion was driven en
 1. **Accounting Methodology**: The reported token breakdowns use offline `tiktoken cl100k_base` accounting parsed from `transcript_full.jsonl` files on disk. Real-world API provider logs (with token caching breakdowns) should be compared across runs.
 2. **Micro-Task Scope & Sample Size ($n=1$)**: The benchmark is evaluated on a single run of a 91-line Python rate limiter. Model sampling variance was not statistically bounded across multiple random seeds.
 3. **Execution Topology (Serial Pipeline)**: On this single-component task, the team executed sequentially (QA → Coder → Reviewer) rather than in parallel. Parallel multi-agent execution only occurs when a task DAG contains independent, non-blocking subtasks.
-4. **Held-Out Test Results**: Tested against 7 adversarial edge cases (concurrency race conditions, boolean parameter rejections, NaN/Inf bounds, capacity limits, and balance immutability). Pruned Mono (7/7), CaveAgents v4 (7/7), Caveman Mono (7/7), Standard Teamwork (5/7).
+4. **Held-Out Adversarial Test Harness**: Implementations were evaluated post-hoc against a 7-test suite (`test_hidden_correctness.py`) covering boolean typing leaks (`isinstance(True, int)`), non-finite float capacities (`float('nan')`), multi-threaded race conditions, and capacity limits. While Pruned Mono (7/7), Caveman Mono (7/7), and CaveAgents v4 (7/7) passed, and Standard Teamwork failed 2/7, this reflects an n=1 observation. It demonstrates that conversational chatter did not prevent subtle type bugs in that specific run, but does not statistically establish general defect distributions across broader tasks.
 
 ---
 
 ## Verified Live Token Expenditure Chart
 
 <p align="center">
-  <img src="../assets/chart_tokens.png" alt="CaveAgents Inverted Cost Frontier" width="100%"/>
+  <img src="../assets/chart_tokens.png" alt="CaveAgents Token Benchmark Comparison" width="100%"/>
 </p>

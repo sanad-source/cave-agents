@@ -14,7 +14,7 @@ This document tracks the version history of CaveAgents from early centralized pr
 | **v2** | Clones + P2P | Direct Peer-to-Peer Messaging | Static (16 Tools) | 91,432 | -36.2% |
 | **v3** | Pre-Flight Bound | P2P + Scoped Context Injection | Static (16 Tools) | 50,395 | -64.8% |
 | **Standard Mono Baseline** | Single Agent | N/A (Monolithic Turn-by-Turn) | Static (16 Tools) | 30,241 | -78.9% |
-| **v4 (Current)** | Dynamic Tool Pruning | P2P + Inverted Cost Frontier | Dynamic Role-Pruned (5 Tools) | **26,784** | **-81.3%** |
+| **v4 (Current)** | Dynamic Tool Pruning | P2P Direct Messaging | Dynamic Role-Pruned (5 Tools) | **26,784** | **-81.3%** |
 | **Caveman Mono Baseline** | Single Agent | N/A (Terse Prompting) | Static (16 Tools) | 16,285 | -88.6% |
 | **Pruned Mono Control** | Single Agent | N/A (Control Arm) | Dynamic Role-Pruned (5 Tools) | **11,381** | **-92.1%** |
 
@@ -53,12 +53,12 @@ This document tracks the version history of CaveAgents from early centralized pr
 - **Token Result**: **50,395 tokens** (44.9% reduction vs v2).
 - **Bottlenecks Identified**: Tool schema declarations in each prompt step still consumed ~2,500 tokens.
 
-### Version 4: Dynamic Tool Pruning & Inverted Cost Frontier (`v4`)
+### Version 4: Dynamic Tool Registry Pruning & Bounded TDD (`v4`)
 - **Released**: State-of-the-art production engine.
 - **Topology**: Dynamic tool-pruned worker DAG with autonomous inspection and compound verifications.
 - **Key Changes**:
   - **Dynamic Tool Pruning**: Defined subagents with role-specific tool subsets via `define_subagent`. Dropped unused tools (e.g. web search, browsers, image generators, notebooks), reducing per-turn tool schema injection from ~2,480 down to ~380 tokens (~2,100 tokens saved per turn).
   - **Autonomous Inspection**: Subagents perform surgical symbol lookups rather than consuming upfront bulk context.
   - **Compound Verifications**: Multi-layer hermetic test validation ensuring zero regressions.
-  - **Inverted Cost Frontier**: Total multi-agent token expenditure reached **26,784 tokens**—achieving a complete 3-agent TDD cycle (QA → Coder → Reviewer) with lower token consumption than an unpruned monolithic single agent (**30,241 tokens**). Under strict experimental control, an identical 5-tool pruned monolith achieves **11,381 tokens** (2.35x cheaper), confirming that tool pruning is an orthogonal lever and that small single-file tasks favor single agents due to zero coordination overhead.
+  - **Multi-Agent Optimization & The Control Gap**: Total multi-agent token expenditure reached **26,784 tokens** (81.3% reduction vs Standard Teamwork at 143k tokens), bringing a 3-agent TDD cycle (QA → Coder → Reviewer) below the cost of an unpruned monolithic single agent (**30,241 tokens**). However, under strict experimental control, an identical 5-tool pruned single-agent control achieves **11,381 tokens** (2.35x cheaper than v4). The earlier apparent "Inverted Cost Frontier" was an artifact of comparing an unpruned monolith (16 tools) against a pruned team (5 tools); on micro-tasks, single agents pay zero handoff or supervisor coordination overhead.
 - **Token Result**: **26,784 tokens** (81.3% reduction vs Standard Teamwork Live run at 143,219 tokens).

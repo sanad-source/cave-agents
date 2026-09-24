@@ -1,6 +1,6 @@
-# CaveAgents v4: Dynamic Tool Pruning & Inverted Cost Frontier
+# CaveAgents v4: Dynamic Tool Registry Pruning & Bounded TDD
 
-`CAVEAGENTS_V4` represents the state-of-the-art in ultra-efficient multi-agent systems, breaking through the **Inverted Cost Frontier** where multi-agent parallel execution consumes fewer total tokens than a single standard monolithic agent.
+`CAVEAGENTS_V4` minimizes multi-agent overhead through dynamic tool schema pruning, strict context scoping, and direct peer-to-peer messaging—reducing multi-agent token expenditure by 81.3% compared to standard teamwork (26,784 vs 143,219 tokens).
 
 ---
 
@@ -33,9 +33,12 @@ Subagents perform targeted inspection of precise files and symbols rather than l
 ### 3. Compound Verification & Early Exit
 Tests are structured with fast failing assertions (`--tb=short`, `-q`), avoiding lengthy error traceback generation in the context window.
 
-### 4. The Inverted Cost Frontier: Empirical Context
+### 4. Multi-Agent Optimization vs. Single-Agent Control
 Standard dogma holds that multi-agent systems incur a heavy token tax (typically 5x–7x the cost of a single agent). CaveAgents v4 significantly reduces this overhead:
-- Standard Teamwork (Live 3-Agent Run): **143,219 tokens**
-- CaveAgents v4 Multi-Agent (Live 3-Agent Sequential TDD Run): **26,784 tokens** (81.3% reduction vs Standard Teamwork)
-- Standard Monolithic Agent (Unpruned, 16 Tools): **30,241 tokens** (v4 is 11.4% cheaper)
-- Caveman Monolithic Agent (Terse, 16 Tools): **16,285 tokens** (~39% cheaper than v4; a pruned monolith is estimated at ~4–5k tokens, roughly 5x–6x cheaper than v4 due to zero coordination tax on small tasks)
+- Standard Teamwork (Live 3-Agent Run, 16 Tools): **143,219 tokens**
+- CaveAgents v4 Multi-Agent (Live 3-Agent Sequential TDD Run, 5 Tools): **26,784 tokens** (81.3% reduction vs Standard Teamwork)
+- Standard Monolith (Verbose Baseline, 16 Tools): **30,241 tokens** (v4 is 11.4% cheaper)
+- Caveman Monolith (Terse Baseline, 16 Tools): **16,285 tokens** (39.2% cheaper than v4)
+- Pruned Monolith Control (Terse Control, 5 Tools): **11,381 tokens** (2.35x cheaper than v4)
+
+> **Key Takeaway**: The apparent "Inverted Cost Frontier" vs Standard Mono was an artifact of comparing an unpruned monolith (16 tools) against a pruned team (5 tools). Under rigorous experimental control with identical 5-tool registries, a single agent is 2.35x cheaper on micro-tasks because it pays zero coordination or handoff tax. Multi-agent teams provide architectural value primarily when problems exceed a single context window or require parallel code generation across decoupled submodules.

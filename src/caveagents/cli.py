@@ -15,7 +15,7 @@ from caveagents.protocol import MessageProtocol
 def print_benchmarks() -> None:
     """Print the empirical benchmark comparison table."""
     print("=" * 68)
-    print(" CaveAgents Empirical Benchmark Table (Identical Refactor Run)")
+    print(" CaveAgents Empirical Benchmark Table (TokenBucket Rate Limiter)")
     print("=" * 68)
     print(f"{'Framework / Configuration':<30} | {'Tokens':<12} | {'Relative vs Teamwork':<15}")
     print("-" * 68)
@@ -36,7 +36,7 @@ def main() -> int:
     """Main CLI entrypoint."""
     parser = argparse.ArgumentParser(
         prog="caveagents",
-        description="CaveAgents - Token-pruned multi-agent orchestration operating on an inverted cost frontier.",
+        description="CaveAgents - Token-pruned multi-agent orchestration framework.",
     )
     parser.add_argument("--version", "-v", action="version", version=f"caveagents {__version__}")
     subparsers = parser.add_subparsers(dest="command", help="Available subcommands")

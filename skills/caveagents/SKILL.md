@@ -1,6 +1,6 @@
 ---
 name: caveagents
-description: Ultra-efficient multi-agent orchestration framework operating on an inverted cost frontier using Dynamic Tool Pruning and ASD-STE100 terseness.
+description: Ultra-efficient multi-agent orchestration framework using Dynamic Tool Registry Pruning and ASD-STE100 terseness to minimize coordination overhead.
 version: 0.4.0
 default_engine: v4
 license: MIT
@@ -8,9 +8,9 @@ license: MIT
 
 # CaveAgents Skill
 
-CaveAgents is a high-performance multi-agent orchestration framework designed to eliminate the multi-agent token tax. By combining macro-level Directed Acyclic Graph (DAG) task scheduling with micro-level ASD-STE100 terse communication and Dynamic Tool Registry Pruning, CaveAgents achieves multi-agent parallel execution at lower token costs than a standard monolithic single-agent session.
+CaveAgents is a high-performance multi-agent orchestration framework designed to eliminate the multi-agent token tax. By combining macro-level Directed Acyclic Graph (DAG) task scheduling with micro-level ASD-STE100 terse communication and Dynamic Tool Registry Pruning, CaveAgents slashes multi-agent coordination overhead by -81.3% compared to standard teamwork.
 
-## Default Engine: v4 (Inverted Cost Frontier)
+## Default Engine: v4 (Dynamic Tool Registry Pruning)
 
 The skill defaults to **v4** execution mode (`CAVEAGENTS_V4`). In v4:
 1. **Dynamic Tool Registry Pruning**: Subagents receive strictly pruned tool definitions via `define_subagent` (saving ~2,500 tokens per tool call turn).
