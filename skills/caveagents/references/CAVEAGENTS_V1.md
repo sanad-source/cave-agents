@@ -25,7 +25,7 @@ graph TD
 1. **Centralized Routing**: All inter-agent data passed through the Captain. No peer-to-peer communication was permitted.
 2. **Serial Phasing**: Subagents were spawned one at a time. Worker 2 could not commence until Worker 1 completed and reported back to Captain.
 3. **Caveman Terseness**: Subagents adopted ASD-STE100 simplified English (omitting articles, conversational pleasantries, and tool narration).
-4. **Token Footprint**: 109,984 tokens on standard refactor benchmark (down from 208,555 tokens in Teamwork baseline, a 47.3% reduction).
+4. **Token Footprint**: 109,984 tokens on TokenBucket task (23.2% reduction vs Teamwork Live baseline at 143,219 tokens; 47.3% reduction vs historical 208,555 theoretical baseline).
 
 ## Limitations
 

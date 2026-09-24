@@ -47,17 +47,21 @@ def generate_benchmark_chart() -> Path:
     bars = ax.barh(y_pos, tokens, color=colors, height=0.6, edgecolor="#1e293b", linewidth=1.0)
 
     ax.invert_yaxis()
-    ax.set_xlabel("Total Billed Tokens (Identical TokenBucket Task)", fontsize=12, fontweight="bold", labelpad=10)
+    ax.set_xlabel("Estimated Total Tokens (Modeled Schemas + Measured Context)", fontsize=11, fontweight="bold", labelpad=10)
+    ax.set_title("Architecture Token Expenditure on TokenBucket Task (Normalized to Pruned Control)", fontsize=12, fontweight="bold", pad=12)
     ax.set_yticks(y_pos)
     ax.set_yticklabels(configs, fontsize=10.5)
 
     ax.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda x, p: f"{int(x):,}"))
 
-    for bar, val in zip(bars, tokens):
+    control_tokens = tokens[0]  # 11,381
+    for i, (bar, val) in enumerate(zip(bars, tokens)):
         w = bar.get_width()
-        ax.text(w + 2500, bar.get_y() + bar.get_height() / 2, f"{val:,}", va="center", ha="left", fontsize=10, fontweight="bold", color="#1e293b")
+        mult = val / control_tokens
+        label = f"{val:,} (1.00x Control)" if i == 0 else f"{val:,} ({mult:.2f}x)"
+        ax.text(w + 2500, bar.get_y() + bar.get_height() / 2, label, va="center", ha="left", fontsize=9.5, fontweight="bold", color="#1e293b")
 
-    ax.set_xlim(0, 185000)
+    ax.set_xlim(0, 195000)
     plt.tight_layout()
 
     out_path = ASSETS_DIR / "chart_inverted_cost_frontier.png"

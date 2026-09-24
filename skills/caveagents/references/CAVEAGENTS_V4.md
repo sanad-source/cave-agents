@@ -18,7 +18,7 @@ graph TD
     Captain --> User
 ```
 
-## Core Breakthroughs
+## Core Mechanisms
 
 ### 1. Dynamic Tool Registry Pruning
 In standard agent frameworks, every step of an agent invocation injects JSON Schema definitions for every registered tool (the default Antigravity environment registers 16 tools, totaling ~2,480 tokens per step).
@@ -35,10 +35,10 @@ Tests are structured with fast failing assertions (`--tb=short`, `-q`), avoiding
 
 ### 4. Multi-Agent Optimization vs. Single-Agent Control
 Standard dogma holds that multi-agent systems incur a heavy token tax (typically 5x–7x the cost of a single agent). CaveAgents v4 significantly reduces this overhead:
-- Standard Teamwork (Live 3-Agent Run, 16 Tools): **143,219 tokens**
-- CaveAgents v4 Multi-Agent (Live 3-Agent Sequential TDD Run, 5 Tools): **26,784 tokens** (81.3% reduction vs Standard Teamwork)
-- Standard Monolith (Verbose Baseline, 16 Tools): **30,241 tokens** (v4 is 11.4% cheaper)
-- Caveman Monolith (Terse Baseline, 16 Tools): **16,285 tokens** (39.2% cheaper than v4)
-- Pruned Monolith Control (Terse Control, 5 Tools): **11,381 tokens** (2.35x cheaper than v4)
+- Standard Teamwork (Live 3-Agent Run, 16 Tools): **143,219 tokens** (12.58x Control)
+- CaveAgents v4 Multi-Agent (Live 3-Agent Sequential TDD Run, 5 Tools): **26,784 tokens** (2.35x Control; 81.3% reduction vs Standard Teamwork)
+- Standard Monolith (Verbose Baseline, 16 Tools): **30,241 tokens** (2.66x Control)
+- Caveman Monolith (Terse Baseline, 16 Tools): **16,285 tokens** (1.43x Control)
+- Pruned Monolith Control (Terse Control, 5 Tools): **11,381 tokens** (1.00x Control Baseline)
 
-> **Key Takeaway**: The apparent "Inverted Cost Frontier" vs Standard Mono was an artifact of comparing an unpruned monolith (16 tools) against a pruned team (5 tools). Under rigorous experimental control with identical 5-tool registries, a single agent is 2.35x cheaper on micro-tasks because it pays zero coordination or handoff tax. Multi-agent teams provide architectural value primarily when problems exceed a single context window or require parallel code generation across decoupled submodules.
+> **Key Takeaway**: The apparent "Inverted Cost Frontier" vs Standard Mono was an artifact of a verbose, unpruned baseline: Standard Mono was burdened by both a verbose prompt and 16 unused tools. Caveman Mono (which also carried all 16 tools) already completed the task in 16,285 tokens (1.43x of control), and the 5-tool Pruned Monolith Control completed it in 11,381 tokens (1.00x, 2.35x cheaper than v4). On micro-tasks, single agents pay zero handoff or supervisor coordination overhead.

@@ -14,18 +14,18 @@ from caveagents.protocol import MessageProtocol
 
 def print_benchmarks() -> None:
     """Print the empirical benchmark comparison table."""
-    print("=" * 68)
+    print("=" * 72)
     print(" CaveAgents Empirical Benchmark Table (TokenBucket Rate Limiter)")
-    print("=" * 68)
-    print(f"{'Framework / Configuration':<30} | {'Tokens':<12} | {'Relative vs Teamwork':<15}")
-    print("-" * 68)
+    print("=" * 72)
+    print(f"{'Framework / Configuration':<30} | {'Tokens':<10} | {'vs Control (1.00x)':<24}")
+    print("-" * 72)
 
-    teamwork_base = BASELINE_BENCHMARKS.get("Teamwork_Live", 143219)
-    for name, tokens in sorted(BASELINE_BENCHMARKS.items(), key=lambda x: x[1], reverse=True):
-        pct = ((tokens - teamwork_base) / teamwork_base) * 100.0
-        pct_str = f"{pct:+.1f}%" if tokens != teamwork_base else "Baseline (0.0%)"
-        print(f"{name.replace('_', ' '):<30} | {tokens:>10,d} | {pct_str:>20}")
-    print("=" * 68)
+    control_base = BASELINE_BENCHMARKS.get("Pruned_Mono", 11381)
+    for name, tokens in sorted(BASELINE_BENCHMARKS.items(), key=lambda x: x[1]):
+        mult = tokens / control_base
+        mult_str = "1.00x (Baseline)" if tokens == control_base else f"{mult:.2f}x (+{(mult-1.0)*100:,.1f}%)"
+        print(f"{name.replace('_', ' '):<30} | {tokens:>10,d} | {mult_str:>24}")
+    print("=" * 72)
     print(" Note: Tool pruning reduces tokens across both paradigms. CaveAgents v4")
     print(" (26,784 tokens) achieves multi-agent TDD isolation for 2.35x of the")
     print(" Pruned Monolith Control (11,381 tokens), while saving -81.3% vs unpruned")

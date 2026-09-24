@@ -19,9 +19,9 @@ graph TD
 ## Key Innovations
 
 1. **P2P Direct Comms**: Workers exchange interface definitions, types, and schema dependencies directly via `send_message(Recipient=worker_id)`, bypassing Captain's context.
-2. **Parallel Agent Clones**: Independent sub-modules execute concurrently across isolated context windows.
+2. **Parallel Agent Clones**: Independent sub-modules execute concurrently across isolated context windows (note: on this single-component rate-limiter task, workers executed serially in a TDD pipeline).
 3. **Terse Wire Serialization**: Messages use structured JSON wire payloads with action tags (`TASK`, `HANDOFF`, `RESULT`, `SYNC`).
-4. **Token Footprint**: 91,432 tokens on standard refactor benchmark (56.2% reduction vs Teamwork baseline).
+4. **Token Footprint**: 91,432 tokens on TokenBucket task (36.2% reduction vs Teamwork Live baseline at 143,219 tokens).
 
 ## Limitations
 
