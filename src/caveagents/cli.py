@@ -20,7 +20,7 @@ def print_benchmarks() -> None:
     print(f"{'Framework / Configuration':<30} | {'Tokens':<12} | {'Relative vs Teamwork':<15}")
     print("-" * 68)
 
-    teamwork_base = BASELINE_BENCHMARKS["Teamwork"]
+    teamwork_base = BASELINE_BENCHMARKS.get("Teamwork_Live", 143219)
     for name, tokens in sorted(BASELINE_BENCHMARKS.items(), key=lambda x: x[1], reverse=True):
         pct = ((tokens - teamwork_base) / teamwork_base) * 100.0
         pct_str = f"{pct:+.1f}%" if tokens != teamwork_base else "Baseline (0.0%)"

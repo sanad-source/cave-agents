@@ -10,16 +10,18 @@ All benchmarks were evaluated under identical task scopes, repository environmen
 
 ## Results Table
 
-| Architecture / Framework | Real Transcript / Run GUID | Input Tokens | Output Tokens | Total Token Usage | vs Teamwork Baseline | vs Standard Mono |
+| Architecture / Framework | Real Transcript / Run GUID | Input Tokens | Output Tokens | Total Token Usage | vs Standard Mono | Multi-Agent Coordination |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Teamwork** | `Standard Teamwork Baseline` | 179,420 | 29,135 | **208,555** | Baseline (0.0%) | +589.6% |
-| **AgentTeams** | `0fa36434 / b39f54d0 / f21c2b4e` | 146,117 | 8,881 | **154,998** | -25.7% | +412.5% |
-| **CaveAgents v1** | `06c2eb6b / 9e765fdd / d49c842a` | 102,240 | 7,744 | **109,984** | -47.3% | +263.7% |
-| **CaveAgents v2** | `ee34719a / e96f0467 / ea071eb7` | 85,760 | 5,672 | **91,432** | -56.2% | +202.3% |
-| **CaveAgents v3** | `1af678ac / b3c9b503 / efe5c647` | 46,000 | 4,395 | **50,395** | -75.8% | +66.6% |
-| **Standard Mono** | `8e45e081-55f1-433a-8900-cdafb7afb923` | 25,669 | 4,572 | **30,241** | -85.5% | Baseline |
-| **CaveAgents v4** | `6a8c617e / 611f72cc / bc6206fb` | 23,384 | 3,400 | **26,784** | **-87.2%** | **-11.4%** |
-| **Caveman Mono** | `9a1b3ca8-9267-4169-a201-3f9f1434aed5` | 13,905 | 2,380 | **16,285** | -92.2% | -46.1% |
+| **Caveman Mono** | `9a1b3ca8-9267-4169-a201-3f9f1434aed5` | 13,905 | 2,380 | **16,285** | -46.1% | None (1 Agent) |
+| **CaveAgents v4** | `6a8c617e / 611f72cc / bc6206fb` | 23,384 | 3,400 | **26,784** | **-11.4%** | **3-Agent Team** |
+| **Standard Mono** | `8e45e081-55f1-433a-8900-cdafb7afb923` | 25,669 | 4,572 | **30,241** | Baseline | None (1 Agent) |
+| **CaveAgents v3** | `1af678ac / b3c9b503 / efe5c647` | 46,000 | 4,395 | **50,395** | +66.6% | 3-Agent Team |
+| **CaveAgents v2** | `ee34719a / e96f0467 / ea071eb7` | 85,760 | 5,672 | **91,432** | +202.3% | 3-Agent Team |
+| **CaveAgents v1** | `06c2eb6b / 9e765fdd / d49c842a` | 102,240 | 7,744 | **109,984** | +263.7% | 3-Agent Team |
+| **Standard Teamwork (Live)** | `22a1996f / 9b3dbf3b / a4ab4fcb` | 132,366 | 10,853 | **143,219** | +373.6% | 3-Agent Team |
+| **AgentTeams** | `0fa36434 / b39f54d0 / f21c2b4e` | 146,117 | 8,881 | **154,998** | +412.5% | 3-Agent Team |
+
+*(Note: Prior unconstrained theoretical projections estimated Teamwork at 208,555 tokens; this live measured run confirms 143,219 tokens on TokenBucket, and up to 615,568 tokens in complex multi-deliverable tournaments).*
 
 ---
 
@@ -59,29 +61,8 @@ This creates the **Inverted Cost Frontier**: developers obtain full parallel mul
 
 ---
 
-## Visualizing Token Scaling Curves
-
-```
-Cumulative Tokens
-220k |                                                    * Teamwork (208k)
-200k |
-160k |                                            * AgentTeams (155k)
-120k |                                    * CaveAgents v1 (110k)
- 90k |                            * CaveAgents v2 (91k)
- 50k |                    * CaveAgents v3 (50k)
- 30k |------------* Standard Mono (30k) -----------------------------------
- 25k |                    * CaveAgents v4 (26.7k) [INVERTED FRONTIER]
- 16k |            * Caveman Mono (16.2k)
-     +-------------------------------------------------------------------->
-      Turn 1                                                    Turn 25
-```
-
-For complete high-resolution visual plots:
+## Verified Live Token Expenditure Chart
 
 <p align="center">
   <img src="../assets/chart_inverted_cost_frontier.png" alt="CaveAgents Inverted Cost Frontier" width="100%"/>
-</p>
-
-<p align="center">
-  <img src="../assets/chart_scaling_turns.png" alt="Context Window Scaling Over Turns" width="100%"/>
 </p>

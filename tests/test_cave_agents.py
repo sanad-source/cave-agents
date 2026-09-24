@@ -57,7 +57,8 @@ def test_empirical_benchmarks():
         "16,285": "caveman mono token count",
         "30,241": "standard mono token count",
         "154,998": "AgentTeams token count",
-        "208,555": "Teamwork token count",
+        "143,219": "Standard Teamwork live run token count",
+        "208,555": "Historical Teamwork projected estimate",
     }
 
     for count, description in benchmarks.items():

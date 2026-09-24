@@ -28,26 +28,26 @@ In **v4**, the entire team finishes the job in **26,784 tokens**—making the mu
 
 The following empirical benchmark measures total token expenditure on an identical multi-file Python refactoring and verification task:
 
-| Configuration / Architecture | Total Tokens | vs Teamwork Baseline | vs Standard Monolithic | Description |
+| Configuration / Architecture | Total Billed Tokens | vs Standard Mono | Multi-Agent Coordination | Description |
 | :--- | :---: | :---: | :---: | :--- |
-| **Teamwork** | 208,555 | Baseline (0.0%) | +589.6% | Unconstrained conversational star-mesh |
-| **AgentTeams** | 154,998 | -25.7% | +412.5% | Structured DAG with full tool catalogs |
-| **CaveAgents v1** | 109,984 | -47.3% | +263.7% | Serial pipeline + ASD-STE100 terseness |
-| **CaveAgents v2** | 91,432 | -56.2% | +202.3% | Parallel worker clones + direct P2P messaging |
-| **CaveAgents v3** | 50,395 | -75.8% | +66.6% | Pre-Flight Bound context injection |
-| **Standard Mono** | 30,241 | -85.5% | Baseline | Single monolithic agent (standard instructions) |
-| **CaveAgents v4** | **26,784** | **-87.2%** | **-11.4%** | **Dynamic Tool Pruning + Inverted Cost Frontier** |
-| **Caveman Mono** | 16,285 | -92.2% | -46.1% | Single monolithic agent (Caveman mode) |
+| **Caveman Mono** | **16,285** | -46.1% | None (1 Agent) | 🥇 Lowest absolute tokens (single terse agent) |
+| **CaveAgents v4** | **26,784** | **-11.4%** | **3-Agent Team** | **🏆 Lowest multi-agent (Cheaper than Standard Mono)** |
+| **Standard Mono** | 30,241 | Baseline | None (1 Agent) | Single agent (verbose baseline) |
+| **CaveAgents v3** | 50,395 | +66.6% | 3-Agent Team | Pre-Flight bound execution strings |
+| **CaveAgents v2** | 91,432 | +202.3% | 3-Agent Team | Cloned coders + direct P2P messaging |
+| **CaveAgents v1** | 109,984 | +263.7% | 3-Agent Team | Serial pipeline with Caveman mode |
+| **Standard Teamwork (Live)** | 143,219 | +373.6% | 3-Agent Team | Standard unpruned team collaboration |
+| **AgentTeams** | 154,998 | +412.5% | 3-Agent Team | Structured DAG with full tool catalogs |
+
+> **Honest Architecture Note**:
+> - **CaveAgents v4** beats **Standard Monolith** (`30,241` vs `26,784 tokens`) by **11.4%**, eliminating the multi-agent token tax.
+> - **Caveman Monolith** (`16,285 tokens`) is **~39% cheaper** than CaveAgents v4 because a lone agent pays zero coordination overhead.
 
 <p align="center">
   <img src="assets/chart_inverted_cost_frontier.png" alt="CaveAgents Inverted Cost Frontier" width="100%"/>
 </p>
 
-<p align="center">
-  <img src="assets/chart_scaling_turns.png" alt="Context Window Scaling Over Turns" width="100%"/>
-</p>
-
-Detailed dual-context accounting and token breakdowns are documented in [docs/BENCHMARKS.md](docs/BENCHMARKS.md).
+Detailed transcript GUIDs and per-turn token breakdowns are documented in [docs/BENCHMARKS.md](docs/BENCHMARKS.md).
 
 ---
 

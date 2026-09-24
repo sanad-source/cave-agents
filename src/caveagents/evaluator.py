@@ -23,7 +23,7 @@ except ImportError:
 
 
 BASELINE_BENCHMARKS: Dict[str, int] = {
-    "Teamwork": 208555,
+    "Teamwork_Live": 143219,
     "AgentTeams": 154998,
     "CaveAgents_v1": 109984,
     "CaveAgents_v2": 91432,
