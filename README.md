@@ -45,6 +45,17 @@ The following empirical benchmark measures total token expenditure on a Python r
   <img src="assets/chart_tokens.png" alt="CaveAgents Benchmark Comparison" width="100%"/>
 </p>
 
+### 🎯 Cost vs. Quality Pareto Frontier
+
+Measuring token cost alone is insufficient—an agent architecture must also preserve implementation quality and edge-case correctness. All implementations were evaluated against an independent, held-out adversarial test suite containing 7 edge cases (boolean coercion rejection, NaN/Inf bounds, concurrent race conditions, capacity ceiling overflow, and balance immutability).
+
+<p align="center">
+  <img src="assets/chart_cost_vs_quality.png" alt="Cost vs Quality Pareto Frontier" width="100%"/>
+</p>
+
+- **Pareto Optimal Frontier (100% Correct)**: Pruned Monolith (11.4k), Caveman Monolith (16.3k), and CaveAgents v4 (26.8k) all achieved a **flawless 7/7 (100%) pass rate**.
+- **Standard Teamwork Failure Mode (71.4%)**: Despite spending **143,219 tokens** (5.3x more than CaveAgents v4), Standard Teamwork failed 2 of the 7 held-out tests (`T2_BooleanRejection` due to Python's `bool` subclassing `int` allowing `tb.consume(True)`, and `T3_NaNInfRejection` due to capacity leaks under non-finite float inputs). Conversational chatter between agents did not translate to edge-case verification.
+
 Detailed transcript GUIDs and per-turn token breakdowns are documented in [docs/BENCHMARKS.md](docs/BENCHMARKS.md).
 
 ---
