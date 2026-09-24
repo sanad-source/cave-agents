@@ -76,6 +76,12 @@ Cumulative Tokens
       Turn 1                                                    Turn 25
 ```
 
-For complete high-resolution visual plots, see:
-- [assets/chart_inverted_cost_frontier.png](assets/chart_inverted_cost_frontier.png)
-- [assets/chart_scaling_turns.png](assets/chart_scaling_turns.png)
+For complete high-resolution visual plots:
+
+<p align="center">
+  <img src="../assets/chart_inverted_cost_frontier.png" alt="CaveAgents Inverted Cost Frontier" width="100%"/>
+</p>
+
+<p align="center">
+  <img src="../assets/chart_scaling_turns.png" alt="Context Window Scaling Over Turns" width="100%"/>
+</p>

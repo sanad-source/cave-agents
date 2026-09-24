@@ -29,6 +29,14 @@ The following empirical benchmark measures total token expenditure on an identic
 | **CaveAgents v4** | **26,784** | **-87.2%** | **-11.4%** | **Dynamic Tool Pruning + Inverted Cost Frontier** |
 | **Caveman Mono** | 16,285 | -92.2% | -46.1% | Single monolithic agent (Caveman mode) |
 
+<p align="center">
+  <img src="assets/chart_inverted_cost_frontier.png" alt="CaveAgents Inverted Cost Frontier" width="100%"/>
+</p>
+
+<p align="center">
+  <img src="assets/chart_scaling_turns.png" alt="Context Window Scaling Over Turns" width="100%"/>
+</p>
+
 Detailed dual-context accounting and token breakdowns are documented in [docs/BENCHMARKS.md](docs/BENCHMARKS.md).
 
 ---
