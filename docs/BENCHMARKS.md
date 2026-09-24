@@ -81,28 +81,6 @@ However, strict experimental control reveals that **this inversion was driven en
 
 ---
 
-## 🎯 Cost vs. Quality Pareto Frontier
-
-An empirical benchmark must verify whether token savings come at the cost of functional quality or edge-case robustness. To evaluate this, implementations were subjected to an independent, held-out adversarial test harness (`test_hidden_correctness.py`) containing 7 edge cases:
-
-1. `T1_BasicLifecycle`: Valid initialization, consumption, and dynamic replenishment.
-2. `T2_BooleanRejection`: Strict rejection of `True`/`False` as token arguments (`bool` is an `int` subclass in Python, e.g. `isinstance(True, int) == True`).
-3. `T3_NaNInfRejection`: Strict rejection of `float('nan')` and `float('inf')` for capacity and refill rates.
-4. `T4_BurstExhaustion`: Rejection when requested tokens exceed available balance without state corruption.
-5. `T5_CapacityCeiling`: Ensuring tokens never accumulate past maximum declared capacity.
-6. `T6_MonotonicReplenishment`: Time-accurate replenishment validation over controlled intervals.
-7. `T7_ConcurrentRaceCondition`: Multi-threaded race condition stress testing (50 concurrent workers consuming simultaneously).
-
-<p align="center">
-  <img src="../assets/chart_cost_vs_quality.png" alt="Cost vs Quality Pareto Frontier" width="100%"/>
-</p>
-
-### Empirical Findings:
-- **Pareto Optimal Frontier (100% Correct)**: Both single-agent configurations (Pruned Monolith at 11,381 tokens, Caveman Monolith at 16,285 tokens) and **CaveAgents v4 Team** (26,784 tokens) achieved a **perfect 7/7 (100%) pass rate**.
-- **Defects in Standard Teamwork (71.4%)**: Unpruned Standard Teamwork expended **143,219 tokens** (5.3x more than CaveAgents v4) yet achieved only **71.4% (5/7)**, failing both `T2_BooleanRejection` and `T3_NaNInfRejection`. High conversational chatter between multiple agents created an illusion of thorough review without catching subtle typing leaks.
-
----
-
 ## Verified Live Token Expenditure Chart
 
 <p align="center">
