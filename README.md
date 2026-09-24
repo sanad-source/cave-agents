@@ -1,5 +1,13 @@
 # CaveAgents ⚡
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Framework: Any Agent](https://img.shields.io/badge/Framework-Any%20Agent-8b5cf6.svg)](https://github.com/sanad-source/cave-agents)
+[![Tested On](https://img.shields.io/badge/Tested%20On-Antigravity%20(Gemini%203.8%20Flash)-f97316.svg)](docs/BENCHMARKS.md)
+[![Token Savings](https://img.shields.io/badge/Token%20Savings-Up%20to%2087%25-22c55e.svg)](docs/BENCHMARKS.md)  
+[![Inspired By](https://img.shields.io/badge/Inspired%20By-NanmiCoder%2Fdsh--agent--teams-800080.svg)](https://github.com/NanmiCoder/dsh-agent-teams)
+[![Caveman Mode](https://img.shields.io/badge/Caveman-JuliusBrussee%2Fcaveman-181717.svg?logo=github)](https://github.com/JuliusBrussee/caveman)
+[![Tests Passing](https://img.shields.io/badge/Tests-5%2F5%20Passing-10b981.svg)](tests/)
+
 ## 📋 Summary
 
 Normally, using a team of AI agents uses 5x to 7x more tokens than a single agent because agents talk too much and reload huge tool lists on every turn.
