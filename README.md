@@ -1,12 +1,12 @@
-# CaveAgents
+# CaveAgents ⚡
 
-## Summary
+## 📋 Summary
 
 Traditional multi-agent orchestration frameworks impose a heavy **Multi-Agent Token Tax**—routinely incurring a 5x–7x token penalty compared to single-agent workflows. This overhead is driven by redundant conversational fluff, bloated tool schema declarations injected on every turn, and unconstrained context window replication.
 
 **CaveAgents** solves this by unifying macro-level Directed Acyclic Graph (DAG) task orchestration with micro-level ASD-STE100 terseness and **Dynamic Tool Registry Pruning**. In its latest iteration (**v4**), CaveAgents crosses the **Inverted Cost Frontier**: achieving full parallel multi-agent decomposition and automated TDD quality gates at **26,784 tokens**—consuming fewer tokens than a standard monolithic single-agent baseline (**30,241 tokens**).
 
-### TL;DR (Gen Z Edition)
+### 🔥 TL;DR (Gen Z Edition)
 
 > Regular multi-agent setups have massive negative aura fr fr—they yap 24/7 with polite pleasantries, shove entire tool catalogs into every turn, and run up a 7x token tab that is definitely not giving.  
 >  
@@ -14,7 +14,7 @@ Traditional multi-agent orchestration frameworks impose a heavy **Multi-Agent To
 
 ---
 
-## Benchmarks
+## 📊 Benchmarks
 
 The following empirical benchmark measures total token expenditure on an identical multi-file Python refactoring and verification task:
 
@@ -41,7 +41,7 @@ Detailed dual-context accounting and token breakdowns are documented in [docs/BE
 
 ---
 
-## Architecture
+## 🏛️ Architecture
 
 CaveAgents couples a supervisory DAG orchestrator (`cave_captain`) with autonomous implementers (`cave_worker`) communicating via direct peer-to-peer (P2P) wire messages, bounded by an automated verification gate (`cave_verifier`).
 
@@ -67,7 +67,7 @@ graph TD
     Captain --> Client
 ```
 
-### Core Ideas
+### 💡 Core Ideas
 
 1. **Dynamic Tool Registry Pruning**: Rather than injecting 15–20 tool schemas on every step (~2,500 tokens/turn), `define_subagent` registers only the exact 5 tools required by each worker. This saves ~2,100–2,500 tokens on every step turn.
 2. **P2P Direct Messaging**: Workers coordinate directly without proxying chatter through the supervisor's context.
@@ -79,7 +79,7 @@ For comprehensive architectural specifications, see [docs/ARCHITECTURE.md](docs/
 
 ---
 
-## Versions
+## 🧬 Versions
 
 - **v1 (Serial Pipeline - 109,984 tokens)**: Combined Caveman prompting with serial agent handoffs. Centralized Captain routing created a relay bottleneck.
 - **v2 (Clones + P2P - 91,432 tokens)**: Introduced concurrent worker clones and direct peer-to-peer messaging, eliminating Captain relay overhead.
@@ -90,9 +90,9 @@ Detailed changelogs are available in [docs/VERSIONS.md](docs/VERSIONS.md).
 
 ---
 
-## Quickstart
+## 🚀 Quickstart
 
-### 1. Install
+### 1. 📦 Install
 
 Install the Python package locally in editable mode:
 
@@ -102,7 +102,7 @@ cd cave-agents
 pip install -e .
 ```
 
-### 2. CLI
+### 2. 💻 CLI
 
 Display the empirical benchmark table:
 
@@ -122,7 +122,7 @@ Validate a communication message against Caveman terseness rules:
 caveagents validate "TASK: Refactor protocol.py. Run pytest tests/."
 ```
 
-### 3. Python SDK
+### 3. 🐍 Python SDK
 
 ```python
 from caveagents import CaveMessage, CostEvaluator, format_cave_message
@@ -143,7 +143,7 @@ print(summary)
 
 ---
 
-## Install as a Skill
+## 🛠️ Install as a Skill
 
 To install and enable CaveAgents as a persistent agent skill:
 
