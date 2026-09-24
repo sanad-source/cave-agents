@@ -88,7 +88,7 @@ Inter-agent messages are serialized into compact, whitespace-minimized JSON wire
 {"sender":"w1","recipient":"w2","action":"SYNC","payload":{"interface":"CostEvaluator","status":"ready"},"summary":"API ready"}
 ```
 
-This compact format reduces message overhead by up to 80% compared to typical conversational multi-agent markdown exchanges.
+This compact format significantly reduces message token overhead compared to verbose, multi-paragraph conversational markdown exchanges.
 
 ---
 

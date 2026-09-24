@@ -34,7 +34,7 @@ Subagents perform targeted inspection of precise files and symbols rather than l
 Tests are structured with fast failing assertions (`--tb=short`, `-q`), avoiding lengthy error traceback generation in the context window.
 
 ### 4. Multi-Agent Optimization vs. Single-Agent Control
-Standard dogma holds that multi-agent systems incur a heavy token tax (typically 5x–7x the cost of a single agent). CaveAgents v4 significantly reduces this overhead:
+Multi-agent coordination introduces substantial token overhead compared to single-agent execution: in our benchmark, standard teamwork incurred 12.58x the token cost of a pruned single-agent control. CaveAgents v4 significantly reduces this multi-agent overhead:
 - Standard Teamwork (Live 3-Agent Run, 16 Tools): **143,219 tokens** (12.58x Control)
 - CaveAgents v4 Multi-Agent (Live 3-Agent Sequential TDD Run, 5 Tools): **26,784 tokens** (2.35x Control; 81.3% reduction vs Standard Teamwork)
 - Standard Monolith (Verbose Baseline, 16 Tools): **30,241 tokens** (2.66x Control)

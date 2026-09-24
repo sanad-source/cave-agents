@@ -49,13 +49,9 @@ Notice how Dynamic Tool Pruning (`define_subagent`) slashes the fixed schema dec
 
 ---
 
-## The Inverted Cost Frontier: Empirical Deconstruction
+## Why the Earlier Inversion Was an Artifact
 
-In traditional multi-agent orchestration, multi-agent overhead was taken as an unavoidable cost of modularity:
-
-$$\text{Cost}(\text{Multi-Agent}) \gg \text{Cost}(\text{Monolithic})$$
-
-Comparing CaveAgents v4 against the standard unpruned monolith gave the earlier appearance of an "Inverted Cost Frontier":
+Comparing CaveAgents v4 against the standard unpruned monolith initially gave the appearance that an optimized multi-agent team could undercut a monolithic single agent:
 
 $$\text{Cost}(\text{CaveAgents v4}) = 26{,}784 < 30{,}241 = \text{Cost}(\text{Standard Mono})$$
 
@@ -79,7 +75,8 @@ However, strict experimental control reveals that **this earlier inversion was a
 
 ## 🔬 Limitations & Threats to Validity
 
-1. **Offline Modeled & Measured Accounting**: Reported token totals are modeled estimates rather than native API billing telemetry. They combine dialogue tokens (measured offline via `tiktoken cl100k_base` on transcript steps) with fixed modeled tool schema constants (~2,480 tokens/turn for 16 tools, ~380 tokens/turn for 5 tools). Cumulative conversational history re-sent on successive turns is estimated rather than extracted from live provider billing headers. Real-world API response telemetry is required for definitive billing verification.
+1. **Offline Modeled & Measured Accounting & Directional Bias**: Reported token totals are modeled estimates rather than native API billing telemetry. They combine dialogue tokens (measured offline via `tiktoken cl100k_base` on transcript steps) with fixed modeled tool schema constants (~2,480 tokens/turn for 16 tools, ~380 tokens/turn for 5 tools). Cumulative conversational history re-sent on successive turns is estimated rather than extracted from live provider billing headers.
+   - **Directionality of Accounting Bias**: The direction of this estimation error is structurally asymmetric. A monolithic agent carries a single growing context that gets re-sent and billed on every step turn, whereas a multi-agent team splits work into shorter, freshly initialized subagent contexts. If re-sent cumulative history is under-counted by offline step parsing, the monolith is likely under-counted to a greater degree than the multi-agent team. Consequently, the measured 2.35x control gap may be overstated for tasks requiring deep monolithic turn depth, and the crossover point where teams become cost-competitive may occur earlier than these static estimates suggest. Native API response telemetry is essential before drawing definitive conclusions on larger tasks.
 2. **Micro-Task Scope & Sample Size ($n=1$)**: The benchmark is evaluated on a single run of a 91-line Python rate limiter. Model sampling variance was not statistically bounded across multiple random seeds.
 3. **Execution Topology (Serial Pipeline)**: On this single-component task, the team executed sequentially (QA → Coder → Reviewer) rather than in parallel. Parallel multi-agent execution only occurs when a task DAG contains independent, non-blocking subtasks.
 4. **Post-Hoc Adversarial Test Harness & Reviewer Efficacy**: The 7 adversarial tests in `test_hidden_correctness.py` were authored post-hoc by the benchmark evaluator using the same model family (Gemini Flash). The test categories (boolean rejection, NaN/Inf bounds, concurrent race conditions, capacity ceilings) overlap heavily with the requirements specified in the QA prompt. While Pruned Mono (7/7), Caveman Mono (7/7), and CaveAgents v4 (7/7) passed, and Standard Teamwork failed 2/7, this is an n=1 observation. It does not statistically separate the top three configurations, nor does it prove that multi-agent teams systematically write worse code. Crucially, the reviewer subagent's independent defect-catch rate was not quantitatively isolated, which remains the primary theoretical justification for multi-agent teams.

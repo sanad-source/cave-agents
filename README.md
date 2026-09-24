@@ -5,12 +5,11 @@
 [![Tested On](https://img.shields.io/badge/Tested%20On-Antigravity%20(Gemini%203.8%20Flash)-f97316.svg)](docs/BENCHMARKS.md)
 [![Token Reduction](https://img.shields.io/badge/Token%20Reduction-81.3%25%20vs%20Teamwork-22c55e.svg)](docs/BENCHMARKS.md)  
 [![Inspired By](https://img.shields.io/badge/Inspired%20By-NanmiCoder%2Fdsh--agent--teams-800080.svg)](https://github.com/NanmiCoder/dsh-agent-teams)
-[![Caveman Mode](https://img.shields.io/badge/Caveman-JuliusBrussee%2Fcaveman-181717.svg?logo=github)](https://github.com/JuliusBrussee/caveman)
-[![Tests Passing](https://img.shields.io/badge/Tests-5%2F5%20Passing-10b981.svg)](tests/)
+[![CI](https://github.com/sanad-source/cave-agents/actions/workflows/ci.yml/badge.svg)](https://github.com/sanad-source/cave-agents/actions/workflows/ci.yml)
 
 ## 📋 Summary
 
-Multi-agent software engineering workflows typically expend 4x–5x more tokens than single-agent execution, where ~80% of total tokens represent multi-agent coordination, repeated tool schema injection on every turn, and conversational chatter.
+In multi-agent software engineering workflows, team coordination adds significant token overhead: in our benchmark, multi-agent teams expended between 2.35x and 13.62x more tokens than a pruned single-agent control (26,784 to 154,998 vs. 11,381 tokens), driven by inter-agent handoffs, duplicated context loading, and repeated tool schema declarations.
 
 **CaveAgents** is an orchestration framework designed to minimize multi-agent coordination overhead through **dynamic tool registry pruning**, **strict context scoping**, and **direct peer-to-peer messaging**.
 
@@ -90,7 +89,7 @@ For comprehensive architectural specifications, see [docs/ARCHITECTURE.md](docs/
 ## 🧬 Versions
 
 - **v1 (Serial Pipeline - 109,984 tokens)**: Combined Caveman prompting with serial agent handoffs. Centralized Captain routing created a relay bottleneck.
-- **v2 (Clones + P2P - 91,432 tokens)**: Introduced concurrent worker clones and direct peer-to-peer messaging, eliminating Captain relay overhead.
+- **v2 (Clones + P2P - 91,432 tokens)**: Introduced worker clones with direct peer-to-peer messaging (which executed serially on this single-file task), eliminating Captain relay overhead.
 - **v3 (Pre-Flight Bound - 50,395 tokens)**: Added pre-flight AST analysis and strict `inScope` context bounds to prevent speculative code exploration.
 - **v4 (Dynamic Tool Registry Pruning - 26,784 tokens)**: Implemented Dynamic Tool Registry Pruning via `define_subagent`, surgical symbol lookups, and bounded test verifications, reducing multi-agent overhead by 81.3% vs standard teamwork.
 
@@ -153,7 +152,8 @@ print(summary)
 
 ## 🔬 Limitations & Threats to Validity
 
-1. **Accounting Assumptions & Modeled Schema Constants**: Reported token counts are modeled estimates rather than native API billing telemetry. They combine dialogue tokens (measured offline via `tiktoken cl100k_base` on transcript steps) with fixed modeled tool schema constants (~2,480 tokens/turn for 16 tools, ~380 tokens/turn for 5 tools). Cumulative conversational history re-sent on successive turns is estimated rather than extracted from live provider billing headers. Real-world API response telemetry is required for definitive billing verification.
+1. **Accounting Assumptions & Directional Bias of Modeled Totals**: Reported token counts are modeled estimates rather than native API billing telemetry. They combine dialogue tokens (measured offline via `tiktoken cl100k_base` on transcript steps) with fixed modeled tool schema constants (~2,480 tokens/turn for 16 tools, ~380 tokens/turn for 5 tools). Cumulative conversational history re-sent on successive turns is estimated rather than extracted from live provider billing headers.
+   - *Directionality of Estimation Error*: The direction of this error matters structurally. A monolithic agent carries a single growing context window re-billed on every step, whereas a team splits execution across shorter, fresher subagent contexts. If re-sent cumulative history is under-counted by offline step parsing, the monolith is likely under-counted to a greater degree than the team. Consequently, the 2.35x control gap on this single-component task may be overstated for workflows requiring deep turn depth, and the crossover point where multi-agent teams become cost-competitive may arrive earlier than these static estimates suggest. Definitive verification requires native API billing telemetry.
 2. **Measured Pruned Monolith Control Gap (2.35x)**: When the single agent was evaluated with the identical 5-tool pruned registry (**Pruned Mono Control**), it completed the task in 10 steps and **11,381 tokens**—**2.35x cheaper than CaveAgents v4** (26,784 tokens). This demonstrates that on a single-file micro-task, an optimized single agent remains significantly more efficient than a multi-agent team because it pays zero coordination or handoff tax. The earlier apparent "Inverted Cost Frontier" was an artifact of a verbose, unpruned baseline: Standard Mono was burdened by both a verbose prompt and 16 unused tools, whereas Caveman Mono (which also carried all 16 tools) already beat v4 at 16,285 tokens.
 3. **Prompt Caching Economics**: In real-world API billing, static tool schemas reside in the system prompt prefix and are subject to server-side prompt caching (typically billed at a 75%–80% discount for cache hits in Google Gemini and Anthropic). Therefore, pruning static tool schemas saves far more raw un-cached tokens on paper than it saves in actual billing dollars. While this does not alter the relative ratio between team and mono architectures, it means the dollar savings from tool pruning are smaller than raw token counts imply.
 4. **Sample Size ($n=1$) & Micro-Task Scope**: The current benchmark reflects a single evaluation on an isolated micro-task (a 91-line Python rate limiter class). Variance from stochastic LLM sampling was not characterized across multi-trial distributions.

@@ -4,11 +4,12 @@
 
 Multi-agent architectures promised modular problem decomposition, parallel task execution, and specialized domain expertise. In practice, however, early multi-agent frameworks suffered from a devastating limitation: **The Multi-Agent Token Tax**.
 
-In real-world benchmarks, executing a moderate software refactor or feature implementation using popular multi-agent orchestration frameworks (such as Teamwork or unconstrained AgentTeams) routinely incurred a **5x to 7x token penalty** compared to a single monolithic agent solving the exact same task.
+In benchmark evaluations on software feature implementation, executing with unconstrained multi-agent orchestration frameworks (such as Standard Teamwork or AgentTeams) incurred a heavy token penalty compared to single-agent execution:
 
 ```
-Monolithic Standard Agent:     ~30,000 tokens
-Typical Multi-Agent System:   ~155,000 - 208,000 tokens  (5x - 7x penalty!)
+Pruned Monolith Control:       ~11,400 tokens (1.00x baseline)
+Standard Monolith Baseline:    ~30,000 tokens (2.66x baseline)
+Standard Multi-Agent Systems:  ~143,000 - 155,000 tokens (12.6x - 13.6x baseline)
 ```
 
 This token explosion was driven by three compounding structural inefficiencies:
@@ -55,4 +56,4 @@ graph LR
     MicroEfficiency --> CaveAgents
 ```
 
-By removing the 5x–7x multi-agent penalty and pruning tool schemas dynamically, CaveAgents unlocks the **Inverted Cost Frontier**—enabling multi-agent parallel systems to run at a lower token cost than even a standard single-agent session.
+By eliminating conversational chatter, bounding task context, and dynamically pruning unused tool schemas, CaveAgents cuts multi-agent overhead by 81.3% (from 143k tokens down to 26.8k tokens), bringing a 3-agent TDD team significantly closer to single-agent efficiency.

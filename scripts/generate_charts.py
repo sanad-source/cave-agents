@@ -28,16 +28,21 @@ def generate_benchmark_chart() -> Path:
         "AgentTeams (3-Agent Team)",
     ]
     tokens = [11381, 16285, 26784, 30241, 50395, 91432, 109984, 143219, 154998]
+    import matplotlib.patches as mpatches
+
+    COLOR_SINGLE = "#0284c7"  # Sky blue for single-agent architectures
+    COLOR_TEAM = "#7c3aed"    # Purple for multi-agent team architectures
+
     colors = [
-        "#047857",  # Pruned Monolith Control - deep forest emerald
-        "#059669",  # Caveman Mono - dark emerald
-        "#10b981",  # CaveAgents v4 - emerald
-        "#f59e0b",  # Standard Mono - amber baseline
-        "#3b82f6",  # v3 - blue
-        "#60a5fa",  # v2 - light blue
-        "#93c5fd",  # v1 - ice blue
-        "#8b5cf6",  # Standard Teamwork (Live) - purple
-        "#64748b",  # AgentTeams - slate
+        COLOR_SINGLE,  # Pruned Monolith Control (Single)
+        COLOR_SINGLE,  # Caveman Mono (Single)
+        COLOR_TEAM,    # CaveAgents v4 (Team)
+        COLOR_SINGLE,  # Standard Mono (Single)
+        COLOR_TEAM,    # CaveAgents v3 (Team)
+        COLOR_TEAM,    # CaveAgents v2 (Team)
+        COLOR_TEAM,    # CaveAgents v1 (Team)
+        COLOR_TEAM,    # Standard Teamwork (Team)
+        COLOR_TEAM,    # AgentTeams (Team)
     ]
 
     plt.style.use("seaborn-v0_8-whitegrid" if "seaborn-v0_8-whitegrid" in plt.style.available else "default")
@@ -60,6 +65,25 @@ def generate_benchmark_chart() -> Path:
         mult = val / control_tokens
         label = f"{val:,} (1.00x Control)" if i == 0 else f"{val:,} ({mult:.2f}x)"
         ax.text(w + 2500, bar.get_y() + bar.get_height() / 2, label, va="center", ha="left", fontsize=9.5, fontweight="bold", color="#1e293b")
+
+    single_patch = mpatches.Patch(
+        facecolor=COLOR_SINGLE, edgecolor="#1e293b", linewidth=0.8,
+        label="Single-Agent Architecture (Zero Coordination Overhead)"
+    )
+    team_patch = mpatches.Patch(
+        facecolor=COLOR_TEAM, edgecolor="#1e293b", linewidth=0.8,
+        label="Multi-Agent Team Architecture (Handoffs & Team Coordination)"
+    )
+    ax.legend(
+        handles=[single_patch, team_patch],
+        loc="center right",
+        bbox_to_anchor=(0.98, 0.72),
+        frameon=True,
+        facecolor="#ffffff",
+        edgecolor="#cbd5e1",
+        fontsize=9.5,
+        framealpha=0.95
+    )
 
     ax.set_xlim(0, 195000)
     plt.tight_layout()
