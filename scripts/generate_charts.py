@@ -60,11 +60,11 @@ def generate_benchmark_chart() -> Path:
 
     out_path = ASSETS_DIR / "chart_inverted_cost_frontier.png"
     fig.savefig(out_path, dpi=300)
-    
-    # Also save as chart_token_comparison.png
     fig.savefig(ASSETS_DIR / "chart_token_comparison.png", dpi=300)
+    fig.savefig(ASSETS_DIR / "chart_tokens.png", dpi=300)
     plt.close(fig)
     print(f"Generated: {out_path}")
+    print(f"Generated: {ASSETS_DIR / 'chart_tokens.png'}")
     return out_path
 
 

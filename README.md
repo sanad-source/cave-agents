@@ -44,7 +44,7 @@ The following empirical benchmark measures total token expenditure on an identic
 > - **Caveman Monolith** (`16,285 tokens`) is **~39% cheaper** than CaveAgents v4 because a lone agent pays zero coordination overhead.
 
 <p align="center">
-  <img src="assets/chart_inverted_cost_frontier.png" alt="CaveAgents Inverted Cost Frontier" width="100%"/>
+  <img src="assets/chart_tokens.png" alt="CaveAgents Inverted Cost Frontier" width="100%"/>
 </p>
 
 Detailed transcript GUIDs and per-turn token breakdowns are documented in [docs/BENCHMARKS.md](docs/BENCHMARKS.md).

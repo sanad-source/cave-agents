@@ -64,5 +64,5 @@ This creates the **Inverted Cost Frontier**: developers obtain full parallel mul
 ## Verified Live Token Expenditure Chart
 
 <p align="center">
-  <img src="../assets/chart_inverted_cost_frontier.png" alt="CaveAgents Inverted Cost Frontier" width="100%"/>
+  <img src="../assets/chart_tokens.png" alt="CaveAgents Inverted Cost Frontier" width="100%"/>
 </p>
