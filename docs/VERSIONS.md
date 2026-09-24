@@ -16,6 +16,7 @@ This document tracks the version history of CaveAgents from early centralized pr
 | **Standard Mono Baseline** | Single Agent | N/A (Monolithic Turn-by-Turn) | Static (16 Tools) | 30,241 | -78.9% |
 | **v4 (Current)** | Dynamic Tool Pruning | P2P + Inverted Cost Frontier | Dynamic Role-Pruned (5 Tools) | **26,784** | **-81.3%** |
 | **Caveman Mono Baseline** | Single Agent | N/A (Terse Prompting) | Static (16 Tools) | 16,285 | -88.6% |
+| **Pruned Mono Control** | Single Agent | N/A (Control Arm) | Dynamic Role-Pruned (5 Tools) | **11,381** | **-92.1%** |
 
 ---
 
@@ -59,5 +60,5 @@ This document tracks the version history of CaveAgents from early centralized pr
   - **Dynamic Tool Pruning**: Defined subagents with role-specific tool subsets via `define_subagent`. Dropped unused tools (e.g. web search, browsers, image generators, notebooks), reducing per-turn tool schema injection from ~2,480 down to ~380 tokens (~2,100 tokens saved per turn).
   - **Autonomous Inspection**: Subagents perform surgical symbol lookups rather than consuming upfront bulk context.
   - **Compound Verifications**: Multi-layer hermetic test validation ensuring zero regressions.
-  - **Inverted Cost Frontier**: Total multi-agent token expenditure reached **26,784 tokens**—achieving a complete 3-agent TDD cycle (QA → Coder → Reviewer) with lower token consumption than an unpruned monolithic single agent (**30,241 tokens**). (Note: On small tasks, an optimized single agent with terse prompting still achieves **16,285 tokens**, and a pruned monolith is estimated at ~4–5k tokens due to zero coordination tax).
+  - **Inverted Cost Frontier**: Total multi-agent token expenditure reached **26,784 tokens**—achieving a complete 3-agent TDD cycle (QA → Coder → Reviewer) with lower token consumption than an unpruned monolithic single agent (**30,241 tokens**). Under strict experimental control, an identical 5-tool pruned monolith achieves **11,381 tokens** (2.35x cheaper), confirming that tool pruning is an orthogonal lever and that small single-file tasks favor single agents due to zero coordination overhead.
 - **Token Result**: **26,784 tokens** (81.3% reduction vs Standard Teamwork Live run at 143,219 tokens).

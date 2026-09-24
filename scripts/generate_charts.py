@@ -17,17 +17,19 @@ ASSETS_DIR.mkdir(parents=True, exist_ok=True)
 def generate_benchmark_chart() -> Path:
     """Generate assets/chart_inverted_cost_frontier.png showing verified live token counts."""
     configs = [
-        "Caveman Mono (Single Agent)",
-        "CaveAgents v4 (3-Agent Team)",
-        "Standard Mono (Single Agent)",
+        "Pruned Monolith (Control, 5 Tools)",
+        "Caveman Mono (16 Tools)",
+        "CaveAgents v4 (3-Agent Team, 5 Tools)",
+        "Standard Mono (16 Tools)",
         "CaveAgents v3 (3-Agent Team)",
         "CaveAgents v2 (3-Agent Team)",
         "CaveAgents v1 (3-Agent Team)",
         "Standard Teamwork (3-Agent Team)",
         "AgentTeams (3-Agent Team)",
     ]
-    tokens = [16285, 26784, 30241, 50395, 91432, 109984, 143219, 154998]
+    tokens = [11381, 16285, 26784, 30241, 50395, 91432, 109984, 143219, 154998]
     colors = [
+        "#047857",  # Pruned Monolith Control - deep forest emerald
         "#059669",  # Caveman Mono - dark emerald
         "#10b981",  # CaveAgents v4 - emerald
         "#f59e0b",  # Standard Mono - amber baseline
@@ -39,7 +41,7 @@ def generate_benchmark_chart() -> Path:
     ]
 
     plt.style.use("seaborn-v0_8-whitegrid" if "seaborn-v0_8-whitegrid" in plt.style.available else "default")
-    fig, ax = plt.subplots(figsize=(11, 6.5), dpi=300)
+    fig, ax = plt.subplots(figsize=(11, 7.0), dpi=300)
 
     y_pos = np.arange(len(configs))
     bars = ax.barh(y_pos, tokens, color=colors, height=0.6, edgecolor="#1e293b", linewidth=1.0)

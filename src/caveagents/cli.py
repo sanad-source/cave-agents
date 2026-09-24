@@ -26,8 +26,10 @@ def print_benchmarks() -> None:
         pct_str = f"{pct:+.1f}%" if tokens != teamwork_base else "Baseline (0.0%)"
         print(f"{name.replace('_', ' '):<30} | {tokens:>10,d} | {pct_str:>20}")
     print("=" * 68)
-    print(" Note: CaveAgents v4 (26,784 tokens) crosses the Inverted Cost Frontier,")
-    print(" achieving multi-agent parallelism cheaper than Standard Mono (30,241).")
+    print(" Note: Tool pruning reduces tokens across both paradigms. CaveAgents v4")
+    print(" (26,784 tokens) achieves multi-agent TDD isolation for 2.35x of the")
+    print(" Pruned Monolith Control (11,381 tokens), while saving -81.3% vs unpruned")
+    print(" Teamwork (143,219 tokens).")
 
 
 def main() -> int:

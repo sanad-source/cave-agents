@@ -16,7 +16,7 @@ Multi-agent software engineering workflows typically incur an 80%–85% token pe
 
 In benchmark evaluations on a Python rate-limiter task (`TokenBucket`), CaveAgents v4 completes a full 3-agent TDD cycle (QA, Implementation, Code Review) in **26,784 tokens**—an **81.3% reduction** compared to standard unpruned multi-agent workflows (143,219 tokens).
 
-> **Control Baseline Note**: On small tasks, an optimized single agent remains significantly cheaper (**16,285 tokens**, ~39% lower) because it pays zero coordination overhead. Tool pruning is a general-purpose optimization that benefits both single agents and teams; multi-agent architectures offer structural value primarily when task scale requires isolated context domains or parallel code generation.
+> **Control Baseline Note**: On small tasks, an optimized single agent remains significantly cheaper (**11,381 tokens** with pruned tools, 2.35x cheaper than CaveAgents v4) because it pays zero coordination overhead. Tool pruning is a universal optimization that benefits both single agents and teams; multi-agent architectures offer structural value primarily when task scale requires isolated context domains or parallel code generation.
 
 ---
 
@@ -24,21 +24,22 @@ In benchmark evaluations on a Python rate-limiter task (`TokenBucket`), CaveAgen
 
 The following empirical benchmark measures total token expenditure on a Python rate limiter class with concurrency test suite (`TokenBucket`):
 
-| Configuration / Architecture | Total Billed Tokens | vs Standard Mono | Multi-Agent Coordination | Description |
-| :--- | :---: | :---: | :---: | :--- |
-| **Caveman Mono** | **16,285** | -46.1% | None (1 Agent) | 🥇 Lowest absolute tokens (single terse agent) |
-| **CaveAgents v4** | **26,784** | **-11.4%** | **3-Agent Team** | Optimized multi-agent team (-81.3% vs Teamwork) |
-| **Standard Mono** | 30,241 | Baseline | None (1 Agent) | Single agent (verbose baseline) |
-| **CaveAgents v3** | 50,395 | +66.6% | 3-Agent Team | Pre-Flight bound execution strings |
-| **CaveAgents v2** | 91,432 | +202.3% | 3-Agent Team | Cloned coders + direct P2P messaging |
-| **CaveAgents v1** | 109,984 | +263.7% | 3-Agent Team | Serial pipeline with Caveman mode |
-| **Standard Teamwork (Live)** | 143,219 | +373.6% | 3-Agent Team | Standard unpruned team collaboration |
-| **AgentTeams** | 154,998 | +412.5% | 3-Agent Team | Structured DAG with full tool catalogs |
+| Configuration / Architecture | Total Billed Tokens | vs Standard Mono | Multi-Agent Coordination | Hidden Tests | Description |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| **Pruned Mono (Control)** | **11,381** | **-62.4%** | None (1 Agent, 5 Tools) | **7/7 (100%)** | 🥇 Lowest absolute tokens (single pruned agent) |
+| **Caveman Mono** | **16,285** | -46.1% | None (1 Agent, 16 Tools) | **7/7 (100%)** | 🥈 Terse prompting baseline |
+| **CaveAgents v4** | **26,784** | **-11.4%** | **3-Agent Team (5 Tools)** | **7/7 (100%)** | Optimized multi-agent team (-81.3% vs Teamwork) |
+| **Standard Mono** | 30,241 | Baseline | None (1 Agent, 16 Tools) | Not tested | Single agent (verbose baseline) |
+| **CaveAgents v3** | 50,395 | +66.6% | 3-Agent Team (16 Tools) | Not tested | Pre-Flight bound execution strings |
+| **CaveAgents v2** | 91,432 | +202.3% | 3-Agent Team (16 Tools) | Not tested | Cloned coders + direct P2P messaging |
+| **CaveAgents v1** | 109,984 | +263.7% | 3-Agent Team (16 Tools) | Not tested | Serial pipeline with Caveman mode |
+| **Standard Teamwork (Live)** | 143,219 | +373.6% | 3-Agent Team (16 Tools) | 5/7 (Failed) | Standard unpruned team collaboration |
+| **AgentTeams** | 154,998 | +412.5% | 3-Agent Team (16 Tools) | Not tested | Structured DAG with full tool catalogs |
 
 > **Experimental Control & Scope Note**:
 > - **Multi-Agent Efficiency**: CaveAgents v4 reduces multi-agent coordination cost down to **26,784 tokens** (-81.3% vs Standard Teamwork at 143k tokens), reaching parity with an unpruned single agent (`30,241 tokens`).
-> - **Monolith Parity & The Pruned Control Gap**: An unpruned single agent with terse prompting (**Caveman Mono**) consumed **16,285 tokens** (~39% cheaper than v4). If the single agent had received the same 5-tool pruned registry (~740 tokens/step across ~6 steps ≈ 4–5k tokens), a pruned monolith is estimated to be **5x–6x cheaper** than v4. Multi-agent teams pay coordination, tool re-initialization, and handoff overhead on every boundary, which micro-tasks cannot amortize.
-> - **When Teams Matter**: Teams become advantageous when tasks exceed a single context window or require parallel code generation across independent architectural modules.
+> - **The Pruned Control Gap (2.35x)**: When the single agent was evaluated with the identical 5-tool pruned registry (**Pruned Mono Control**), it completed the task in **11,381 tokens** (10 steps, $0.00133)—**2.35x cheaper than CaveAgents v4**. Both passed 7/7 on the held-out adversarial test suite. The earlier apparent "Inverted Cost Frontier" was an artifact of comparing an unpruned monolith (16 tools) against a pruned team (5 tools). Single agents pay zero handoff or supervisory overhead.
+> - **When Teams Matter**: Multi-agent teams provide structural value when problems exceed a single model's context window or require parallel code generation across decoupled submodules.
 
 <p align="center">
   <img src="assets/chart_tokens.png" alt="CaveAgents Benchmark Comparison" width="100%"/>

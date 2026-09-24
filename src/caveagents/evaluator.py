@@ -31,6 +31,7 @@ BASELINE_BENCHMARKS: Dict[str, int] = {
     "Standard_Mono": 30241,
     "CaveAgents_v4": 26784,
     "Caveman_Mono": 16285,
+    "Pruned_Mono_Control": 11381,
 }
 
 

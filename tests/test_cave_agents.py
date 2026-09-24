@@ -53,6 +53,7 @@ def test_empirical_benchmarks():
     content = benchmarks_file.read_text(encoding="utf-8")
 
     benchmarks = {
+        "11,381": "pruned monolith control token count",
         "26,784": "v4 live run token count",
         "16,285": "caveman mono token count",
         "30,241": "standard mono token count",
