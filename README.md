@@ -6,6 +6,12 @@ Traditional multi-agent orchestration frameworks impose a heavy **Multi-Agent To
 
 **CaveAgents** solves this by unifying macro-level Directed Acyclic Graph (DAG) task orchestration with micro-level ASD-STE100 terseness and **Dynamic Tool Registry Pruning**. In its latest iteration (**v4**), CaveAgents crosses the **Inverted Cost Frontier**: achieving full parallel multi-agent decomposition and automated TDD quality gates at **26,784 tokens**—consuming fewer tokens than a standard monolithic single-agent baseline (**30,241 tokens**).
 
+### TL;DR (Gen Z Edition)
+
+> Regular multi-agent setups have massive negative aura fr fr—they yap 24/7 with polite pleasantries, shove entire tool catalogs into every turn, and run up a 7x token tab that is definitely not giving.  
+>  
+> **CaveAgents v4** locked in and dropped the ultimate glow up: zero yapping, strictly pruned tool drip via `define_subagent`, and direct P2P DMs so subagents don't spam the group chat. It hits the inverted cost frontier at **26.7k tokens**—literally mogging single-agent monoliths while keeping test-driven verification 100% no cap. Straight cooking.
+
 ---
 
 ## Benchmarks
