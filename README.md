@@ -1,10 +1,5 @@
 # CaveAgents
 
-> **Token-pruned multi-agent orchestration framework operating on an inverted cost frontier.**  
-> Repository: [github.com/sanad-source/cave-agents](https://github.com/sanad-source/cave-agents)
-
----
-
 ## Executive Summary
 
 Traditional multi-agent orchestration frameworks impose a heavy **Multi-Agent Token Tax**—routinely incurring a 5x–7x token penalty compared to single-agent workflows. This overhead is driven by redundant conversational fluff, bloated tool schema declarations injected on every turn, and unconstrained context window replication.
