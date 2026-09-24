@@ -20,7 +20,7 @@ This token explosion was driven by three compounding structural inefficiencies:
 
 ## Caveman Mode
 
-The antidote to conversational bloat emerged from **Caveman Mode**—an ultra-terse prompt constraint inspired by Simplified Technical English (**ASD-STE100**). In Caveman mode:
+The antidote to conversational bloat emerged from **Caveman Mode**, created by **[Julius Brussee](https://github.com/JuliusBrussee/caveman)** (*"why use many token when few token do trick"*) and inspired by Simplified Technical English (**ASD-STE100**). In Caveman mode:
 - All filler words, conversational greetings, and pleasantries are eliminated.
 - Tool narration ("Now I am going to view the file...") is strictly prohibited.
 - Syntax is condensed to telegraphic, factual statements, structured key-value payloads, and direct imperative tool invocations.
