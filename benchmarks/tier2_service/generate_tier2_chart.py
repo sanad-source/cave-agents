@@ -30,7 +30,7 @@ mono_hid = [r["test_results"]["hidden"]["passed"] for r in mono_records]
 v4_hid = [r["test_results"]["hidden"]["passed"] for r in v4_records]
 
 plt.style.use("seaborn-v0_8-whitegrid" if "seaborn-v0_8-whitegrid" in plt.style.available else "default")
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5.5), dpi=300)
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5.8), dpi=300)
 
 COLOR_MONO = "#0284c7"  # Blue for single agent
 COLOR_V4 = "#7c3aed"    # Purple for multi-agent team
@@ -38,7 +38,7 @@ COLOR_V4 = "#7c3aed"    # Purple for multi-agent team
 # Subplot 1: Token Expenditure Distribution
 bp1 = ax1.boxplot(
     [mono_tokens, v4_tokens],
-    tick_labels=["Pruned Mono (Control)\n[n=10]", "CaveAgents v4 Team\n[n=10]"],
+    tick_labels=["Pruned Mono (Control)\n[n=10]", "CaveAgents v4 (2-Worker Team)\n[No Reviewer, n=10]"],
     patch_artist=True,
     widths=0.45,
     boxprops=dict(linewidth=1.2),
@@ -65,7 +65,7 @@ ax1.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda x, p: f"{in
 # Subplot 2: Wall-Clock Latency Distribution
 bp2 = ax2.boxplot(
     [mono_lat, v4_lat],
-    tick_labels=["Pruned Mono (Control)\n[n=10]", "CaveAgents v4 Team\n[n=10]"],
+    tick_labels=["Pruned Mono (Control)\n[n=10]", "CaveAgents v4 (2-Worker Team)\n[No Reviewer, n=10]"],
     patch_artist=True,
     widths=0.45,
     boxprops=dict(linewidth=1.2),
@@ -85,11 +85,11 @@ v4_lat_mean = np.mean(v4_lat)
 lat_ratio = v4_lat_mean / mono_lat_mean
 
 ax2.set_ylabel("Wall-Clock Latency (Seconds)", fontsize=11, fontweight="bold")
-ax2.set_title(f"Wall-Clock Execution Time\n(Parity at {lat_ratio:.2f}x: {v4_lat_mean:.1f}s vs {mono_lat_mean:.1f}s)", fontsize=12, fontweight="bold")
+ax2.set_title(f"Wall-Clock Execution Time: Parity at {lat_ratio:.2f}x ({v4_lat_mean:.1f}s vs {mono_lat_mean:.1f}s)\n[Functionally Serialized: Executor Polled Waiting for Foundation Models]", fontsize=11, fontweight="bold")
 
-patch_mono = mpatches.Patch(facecolor=COLOR_MONO, edgecolor="#1e293b", label="Pruned Single Agent (159/160 hidden tests passed, 99.4%)")
-patch_v4 = mpatches.Patch(facecolor=COLOR_V4, edgecolor="#1e293b", label="CaveAgents v4 Team (160/160 hidden tests passed, 100.0%)")
-fig.legend(handles=[patch_mono, patch_v4], loc="lower center", ncol=2, frameon=True, fontsize=10.5, bbox_to_anchor=(0.5, -0.05))
+patch_mono = mpatches.Patch(facecolor=COLOR_MONO, edgecolor="#1e293b", label="Pruned Single Agent (159/160 passed; 1 timeout cancellation defect in T08)")
+patch_v4 = mpatches.Patch(facecolor=COLOR_V4, edgecolor="#1e293b", label="CaveAgents v4 (2 Workers: Foundation + Executor, 160/160 passed, 100%)")
+fig.legend(handles=[patch_mono, patch_v4], loc="lower center", ncol=2, frameon=True, fontsize=10, bbox_to_anchor=(0.5, -0.06))
 
 plt.suptitle("Tier 2 Multi-File Service Benchmark: Pruned Monolith vs. CaveAgents v4 (n=10 per Arm, N=20 Total)", fontsize=13, fontweight="bold", y=1.02)
 plt.tight_layout()
