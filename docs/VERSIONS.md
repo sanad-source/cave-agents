@@ -27,7 +27,7 @@ This document tracks the version history of CaveAgents from early centralized pr
 | **Pruned Monolith Control** | $n=10$ | **27,824 ± 5,440** | 25,447 | 153.8s ± 30.6s | 159 / 160 (99.38%) | **1.00x** (Baseline) |
 | **CaveAgents v4-lite (2-Worker, No Review)** | $n=10$ | **85,782 ± 11,462** | 81,602 | 155.5s ± 29.2s | 160 / 160 (100.00%) | **3.08x** (+208.3%) |
 
-> **Architecture Distinction & Headline Finding**: Tier 1 evaluated the canonical 3-agent TDD team (**CaveAgents v4**: QA → Coder → Reviewer), while Tier 2 evaluated a stripped-down 2-worker variant (**CaveAgents v4-lite**: Foundation → Executor) with no reviewer stage. Calling both "CaveAgents v4" conflates two distinct architectures. The honest headline: **even the cheapest possible team shape — two agents, serial handoff, no review — costs ~3x tokens for zero demonstrated benefit on this task.** Latency was at exact parity (155.5s vs 153.8s) due to upstream data dependencies causing functional serialization, and the 160/160 vs 159/160 pass rate was a single edge defect, not a systemic quality signal. The two mechanisms that could justify a team—genuine parallel concurrency and adversarial review—remain to be tested.
+> **Architecture Distinction**: Tier 1 evaluated a 3-agent TDD team (QA → Coder → Reviewer); Tier 2 evaluated a minimal 2-worker team (Foundation → Executor, no reviewer). Even this minimal team carries a **3.08x token tax** at exact latency parity (155.5s vs 153.8s) due to upstream data dependencies causing functional serialization. True parallel speedup and adversarial review efficacy remain to be tested.
 
 
 ---
