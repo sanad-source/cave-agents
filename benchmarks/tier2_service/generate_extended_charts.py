@@ -53,7 +53,7 @@ plt.style.use("seaborn-v0_8-whitegrid" if "seaborn-v0_8-whitegrid" in plt.style.
 
 def make_scaling_chart():
     """Chart 1: Cross-Tier Scaling (Tier 1 vs Tier 2)."""
-    fig, ax = plt.subplots(figsize=(10, 5.8), dpi=300)
+    fig, ax = plt.subplots(figsize=(10.5, 6.0), dpi=300)
 
     tier1_mono = 11381
     tier1_v4 = 26784
@@ -64,14 +64,14 @@ def make_scaling_chart():
     width = 0.35
 
     rects1 = ax.bar(x - width/2, [tier1_mono, tier2_mono], width, label="Pruned Monolith Control", color=COLOR_MONO, alpha=0.9, edgecolor="#0f172a", linewidth=1.2)
-    rects2 = ax.bar(x + width/2, [tier1_v4, tier2_v4], width, label="CaveAgents v4 Team", color=COLOR_V4, alpha=0.9, edgecolor="#0f172a", linewidth=1.2)
+    rects2 = ax.bar(x + width/2, [tier1_v4, tier2_v4], width, label="CaveAgents Teams (v4 @ T1, v4-lite @ T2)", color=COLOR_V4, alpha=0.9, edgecolor="#0f172a", linewidth=1.2)
 
     ax.set_ylabel("Estimated Total Tokens", fontsize=11, fontweight="bold")
-    ax.set_title("Cross-Tier Coordination Tax: Single Agent vs. Multi-Agent Team", fontsize=13, fontweight="bold", pad=15)
+    ax.set_title("Cross-Tier Coordination Tax: Single Agent vs. Multi-Agent Teams", fontsize=13, fontweight="bold", pad=15)
     ax.set_xticks(x)
     ax.set_xticklabels([
-        "Tier 1: Single Algorithmic Component (TokenBucket, ~91 LOC)\n[3-Agent Team: QA + Coder + Reviewer, n=1]",
-        "Tier 2: Multi-File Asynchronous Service (taskflow, ~500 LOC)\n[2-Agent Team: Foundation + Executor (No Reviewer), n=10]"
+        "Tier 1: Single Algorithmic Component (TokenBucket, ~91 LOC)\n[CaveAgents v4: QA + Coder + Reviewer (3 Agents), n=1]",
+        "Tier 2: Multi-File Asynchronous Service (taskflow, ~500 LOC)\n[CaveAgents v4-lite: Foundation + Executor (No Review, 2 Agents), n=10]"
     ], fontsize=9.5, fontweight="bold")
     ax.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda val, p: f"{int(val):,}"))
 
@@ -92,12 +92,12 @@ def make_scaling_chart():
                     ha="center", va="bottom", fontsize=9.5, fontweight="bold", color="#5b21b6")
 
     # Add insight callout
-    ax.text(0.5, 96000, "Coordination Tax widens from 2.35x to 3.08x (+73.0% gap)\nEVEN AFTER OMITTING THE REVIEWER STAGE\n(Downstream Executor functionally blocked on upstream Foundation models)",
-            ha="center", va="center", fontsize=9.5, fontweight="bold",
+    ax.text(0.5, 96000, "Minimal 2-worker serial handoff (v4-lite, no review) still costs 3.08x (+208%)\nZero demonstrated benefit on this task: latency parity (serial blocking),\n159/160 vs 160/160 pass rate is within noise (single defect in T08)",
+            ha="center", va="center", fontsize=9.0, fontweight="bold",
             bbox=dict(boxstyle="round,pad=0.5", facecolor="#fef3c7", edgecolor="#f59e0b", alpha=0.95))
 
     ax.set_ylim(0, 118000)
-    ax.legend(loc="upper left", frameon=True, fontsize=10.5)
+    ax.legend(loc="upper left", frameon=True, fontsize=10.0)
     plt.tight_layout()
 
     out_file = ASSETS_DIR / "chart_scaling_tiers.png"
@@ -112,9 +112,9 @@ def make_breakdown_chart():
 
     categories = [
         "Pruned Monolith\n(Full Service Control)",
-        "v4: Foundation Worker\n(Models, Storage, Queue)",
-        "v4: Executor Worker\n(Executor, Service)",
-        "v4: Combined 2-Worker Team\n(Foundation + Executor)"
+        "v4-lite: Foundation Worker\n(Models, Storage, Queue)",
+        "v4-lite: Executor Worker\n(Executor, Service)",
+        "v4-lite: Combined 2-Worker Team\n(Foundation + Executor, No Review)"
     ]
 
     dialogues = [np.mean(mono_diag), np.mean(found_diag), np.mean(exec_diag), np.mean(v4_diag)]
@@ -127,7 +127,7 @@ def make_breakdown_chart():
     p2 = ax.bar(x, schemas, width, bottom=dialogues, label="Tool Schema Declaration Tokens", color="#f59e0b", edgecolor="#d97706", linewidth=1.2)
 
     ax.set_ylabel("Estimated Total Tokens", fontsize=11, fontweight="bold")
-    ax.set_title("Tier 2 Token Expenditure Decomposition: Dialogue vs. Schema Costs\n(Evaluated on 2-Worker Division of Labor, Reviewer Omitted)", fontsize=12.5, fontweight="bold", pad=15)
+    ax.set_title("Tier 2 Token Expenditure Decomposition: Dialogue vs. Schema Costs\n(Evaluated on CaveAgents v4-lite: 2-Worker Division of Labor, No Reviewer)", fontsize=12.0, fontweight="bold", pad=15)
     ax.set_xticks(x)
     ax.set_xticklabels(categories, fontsize=9.5, fontweight="bold")
     ax.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda val, p: f"{int(val):,}"))
@@ -157,7 +157,7 @@ def make_pareto_chart():
     # Plot Monolith trials
     ax.scatter(mono_lat, mono_tokens, color=COLOR_MONO, s=90, alpha=0.85, edgecolors="#0f172a", linewidth=1.2, label="Pruned Monolith Trials (n=10)", zorder=3)
     # Plot Team trials
-    ax.scatter(v4_lat, v4_tokens, color=COLOR_V4, s=100, marker="D", alpha=0.85, edgecolors="#0f172a", linewidth=1.2, label="CaveAgents v4 Team (2 Workers, n=10)", zorder=3)
+    ax.scatter(v4_lat, v4_tokens, color=COLOR_V4, s=100, marker="D", alpha=0.85, edgecolors="#0f172a", linewidth=1.2, label="CaveAgents v4-lite Team (2 Workers, n=10)", zorder=3)
 
     # Centroid markers
     mean_mono_lat = np.mean(mono_lat)
@@ -166,7 +166,7 @@ def make_pareto_chart():
     mean_v4_tok = np.mean(v4_tokens)
 
     ax.scatter([mean_mono_lat], [mean_mono_tok], color="#0284c7", s=250, marker="*", edgecolors="#0f172a", linewidth=1.5, zorder=4, label=f"Monolith Mean ({mean_mono_lat:.1f}s, {int(mean_mono_tok):,} tok)")
-    ax.scatter([mean_v4_lat], [mean_v4_tok], color="#7c3aed", s=250, marker="*", edgecolors="#0f172a", linewidth=1.5, zorder=4, label=f"v4 Team Mean ({mean_v4_lat:.1f}s, {int(mean_v4_tok):,} tok)")
+    ax.scatter([mean_v4_lat], [mean_v4_tok], color="#7c3aed", s=250, marker="*", edgecolors="#0f172a", linewidth=1.5, zorder=4, label=f"v4-lite Team Mean ({mean_v4_lat:.1f}s, {int(mean_v4_tok):,} tok)")
 
     # Latency parity line
     ax.axvline(mean_mono_lat, color="#0284c7", linestyle="--", alpha=0.4, linewidth=1.2)
@@ -174,15 +174,15 @@ def make_pareto_chart():
 
     ax.set_xlabel("Wall-Clock Execution Time (Seconds)", fontsize=11, fontweight="bold")
     ax.set_ylabel("Estimated Total Tokens", fontsize=11, fontweight="bold")
-    ax.set_title("Tier 2 Trade-off: Wall-Clock Latency vs. Token Expenditure (N=20)", fontsize=13, fontweight="bold", pad=15)
+    ax.set_title("Tier 2 Trade-off: Wall-Clock Latency vs. Token Expenditure (N=20)\nPruned Monolith vs. CaveAgents v4-lite", fontsize=12.5, fontweight="bold", pad=15)
     ax.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda val, p: f"{int(val):,}"))
 
     # Annotation
-    ax.text(175, 45000, "Functionally Serialized via Data-Flow Dependency\nIdentical Latency Band (~120s–230s) | 3.08x Token Separation",
-            fontsize=9.5, fontweight="bold", color="#1e293b",
+    ax.text(175, 45000, "Functionally Serialized via Data-Flow Dependency\nIdentical Latency Band (~120s–230s) | 3.08x Token Separation\nZero Demonstrated Benefit: Latency Wash & Quality Parity",
+            fontsize=9.0, fontweight="bold", color="#1e293b",
             bbox=dict(boxstyle="round,pad=0.5", facecolor="#e0f2fe", edgecolor="#0284c7", alpha=0.9))
 
-    ax.legend(loc="upper left", frameon=True, fontsize=9.5)
+    ax.legend(loc="upper left", frameon=True, fontsize=9.0)
     ax.set_ylim(15000, 120000)
     ax.set_xlim(110, 240)
     plt.tight_layout()

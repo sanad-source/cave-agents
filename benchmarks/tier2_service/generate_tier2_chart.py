@@ -38,7 +38,7 @@ COLOR_V4 = "#7c3aed"    # Purple for multi-agent team
 # Subplot 1: Token Expenditure Distribution
 bp1 = ax1.boxplot(
     [mono_tokens, v4_tokens],
-    tick_labels=["Pruned Mono (Control)\n[n=10]", "CaveAgents v4 (2-Worker Team)\n[No Reviewer, n=10]"],
+    tick_labels=["Pruned Mono (Control)\n[n=10]", "CaveAgents v4-lite (2-Worker Team)\n[No Reviewer, n=10]"],
     patch_artist=True,
     widths=0.45,
     boxprops=dict(linewidth=1.2),
@@ -59,13 +59,13 @@ v4_mean = np.mean(v4_tokens)
 ratio = v4_mean / mono_mean
 
 ax1.set_ylabel("Estimated Total Tokens", fontsize=11, fontweight="bold")
-ax1.set_title(f"Token Expenditure Distribution\n(v4 is {ratio:.2f}x more expensive, +{(ratio-1)*100:.1f}%)", fontsize=12, fontweight="bold")
+ax1.set_title(f"Token Expenditure Distribution\n(v4-lite is {ratio:.2f}x more expensive, +{(ratio-1)*100:.1f}%)", fontsize=12, fontweight="bold")
 ax1.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda x, p: f"{int(x):,}"))
 
 # Subplot 2: Wall-Clock Latency Distribution
 bp2 = ax2.boxplot(
     [mono_lat, v4_lat],
-    tick_labels=["Pruned Mono (Control)\n[n=10]", "CaveAgents v4 (2-Worker Team)\n[No Reviewer, n=10]"],
+    tick_labels=["Pruned Mono (Control)\n[n=10]", "CaveAgents v4-lite (2-Worker Team)\n[No Reviewer, n=10]"],
     patch_artist=True,
     widths=0.45,
     boxprops=dict(linewidth=1.2),
@@ -88,10 +88,10 @@ ax2.set_ylabel("Wall-Clock Latency (Seconds)", fontsize=11, fontweight="bold")
 ax2.set_title(f"Wall-Clock Execution Time: Parity at {lat_ratio:.2f}x ({v4_lat_mean:.1f}s vs {mono_lat_mean:.1f}s)\n[Functionally Serialized: Executor Polled Waiting for Foundation Models]", fontsize=11, fontweight="bold")
 
 patch_mono = mpatches.Patch(facecolor=COLOR_MONO, edgecolor="#1e293b", label="Pruned Single Agent (159/160 passed; 1 timeout cancellation defect in T08)")
-patch_v4 = mpatches.Patch(facecolor=COLOR_V4, edgecolor="#1e293b", label="CaveAgents v4 (2 Workers: Foundation + Executor, 160/160 passed, 100%)")
+patch_v4 = mpatches.Patch(facecolor=COLOR_V4, edgecolor="#1e293b", label="CaveAgents v4-lite (2 Workers: Foundation + Executor, No Review; 160/160 passed)")
 fig.legend(handles=[patch_mono, patch_v4], loc="lower center", ncol=2, frameon=True, fontsize=10, bbox_to_anchor=(0.5, -0.06))
 
-plt.suptitle("Tier 2 Multi-File Service Benchmark: Pruned Monolith vs. CaveAgents v4 (n=10 per Arm, N=20 Total)", fontsize=13, fontweight="bold", y=1.02)
+plt.suptitle("Tier 2 Multi-File Service Benchmark: Pruned Monolith vs. CaveAgents v4-lite (n=10 per Arm, N=20 Total)", fontsize=13, fontweight="bold", y=1.02)
 plt.tight_layout()
 
 out_chart = ASSETS_DIR / "chart_tier2_benchmark.png"

@@ -46,11 +46,12 @@ Multi-agent coordination introduces substantial token overhead compared to singl
 
 #### Tier 2: Multi-File Asynchronous Service (`taskflow`, ~500 LOC, $n=10$ per Arm, $N=20$)
 - **Pruned Monolith Control ($n=10$)**: **27,824 ± 5,440 tokens** (1.00x Baseline), 153.8s ± 30.6s latency, 159/160 hidden tests passed (99.38%).
-- **CaveAgents v4 Team ($n=10$)**: **85,782 ± 11,462 tokens** (3.08x Control, +208.3%), 155.5s ± 29.2s latency, 160/160 hidden tests passed (100.00%).
+- **CaveAgents v4-lite Team ($n=10$)**: **85,782 ± 11,462 tokens** (3.08x Control, +208.3%), 155.5s ± 29.2s latency, 160/160 hidden tests passed (100.00%).
 - **Expenditure Decomposition**: Foundation worker consumed 29,722 tokens (exceeding the entire monolith), while Executor worker consumed 56,059 tokens.
 
-> **Key Takeaway & Cross-Tier Scaling**:
-> 1. **Widening Coordination Tax**: The coordination tax widened from **2.35x (+135.3%)** at Tier 1 to **3.08x (+208.3%)** at Tier 2. Splitting context across decoupled modules did not overcome the coordination tax; each subagent required redundant prompt ingestion and separate tool turn loops.
-> 2. **Wall-Clock Parity**: Concurrent worker execution achieved exact latency parity (1.01x: 155.5s vs 153.8s). Initialization and messaging roundtrips cancelled out parallel generation speedups.
-> 3. **The Tier 3 Question**: Whether the coordination tax continues widening, plateaus, or inverts on large cross-package refactoring (Tier 3) remains the decisive open question for multi-agent systems.
+> **Key Takeaway & Architecture Distinction**:
+> 1. **Minimal Team Shape, Maximum Tax**: Tier 2 evaluated a stripped-down 2-worker variant (**CaveAgents v4-lite**: Foundation → Executor, no review gate). Even this cheapest possible team shape costs **3.08x tokens (+208.3%)** for zero demonstrated benefit on this task.
+> 2. **Latency Parity is Functional Serialization**: Concurrent worker dispatch achieved exact wall-clock parity (155.5s vs 153.8s, 1.01x) because Executor was blocked polling the filesystem for Foundation models, eliminating parallel acceleration.
+> 3. **Defect Signal**: The 160/160 vs 159/160 pass rate was a single timeout cancellation failure in Trial 08, which sits within stochastic noise rather than proving systematic superiority.
+> 4. **Untested Mechanisms**: Genuine parallel speedups (on fully independent modules) and adversarial review efficacy (with a dedicated reviewer stage) remain the two empirical hypotheses to test going forward.
 

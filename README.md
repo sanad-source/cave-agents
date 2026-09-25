@@ -14,10 +14,10 @@ In multi-agent software engineering workflows, team coordination adds significan
 **CaveAgents** is an orchestration framework designed to minimize multi-agent coordination overhead through **dynamic tool registry pruning**, **strict context scoping**, and **direct peer-to-peer messaging**.
 
 In empirical evaluations across two distinct software tiers:
-- **Tier 1 (Micro Component, 91 LOC)**: CaveAgents v4 completes a full 3-agent TDD cycle (QA, Implementation, Code Review) in **26,784 estimated tokens**—an **81.3% reduction** compared to standard unpruned multi-agent workflows (143,219 tokens), but **2.35x more expensive** than an identical 5-tool pruned single-agent control (11,381 tokens).
-- **Tier 2 (Medium Asynchronous Service, ~500 LOC, $n=10$ per Arm, $N=20$)**: Evaluated across 20 randomized trials with 16 held-out adversarial tests, CaveAgents v4 averaged **85,782 ± 11,462 tokens** vs. **27,824 ± 5,440 tokens** for the pruned monolith—demonstrating that the multi-agent coordination tax **widened from 2.35x to 3.08x (+208.3%)** rather than amortizing at medium scale. Wall-clock latency reached **exact parity** (155.5s vs 153.8s, 1.01x), while the team captured 1 edge cancellation bug (100% vs 99.4% held-out test pass rate).
+- **Tier 1 (Micro Component, 91 LOC)**: **CaveAgents v4** (a canonical 3-agent TDD pipeline: QA, Implementation, Code Review) completes the task in **26,784 estimated tokens**—an **81.3% reduction** compared to standard unpruned multi-agent workflows (143,219 tokens), but **2.35x more expensive** than an identical 5-tool pruned single-agent control (11,381 tokens).
+- **Tier 2 (Medium Asynchronous Service, ~500 LOC, $n=10$ per Arm, $N=20$)**: Evaluated across 20 randomized trials with 16 held-out adversarial tests, **CaveAgents v4-lite (2-worker implementation team: Foundation + Executor, no review gate)** averaged **85,782 ± 11,462 tokens** vs. **27,824 ± 5,440 tokens** for the pruned monolith (**3.08x tax, +208.3%**).
 
-> **Core Systems Finding**: On both micro-tasks and multi-file medium services, an optimized single agent remains significantly cheaper (2.35x–3.08x) because it pays zero inter-agent handoff, duplicate prompt ingestion, or supervisor routing overhead. Dynamic tool pruning benefits both single agents and teams equally. The central open frontier is **Tier 3 (Large Cross-Package Refactoring)**: determining whether the coordination tax continues widening, plateaus, or finally inverts when single-context reasoning capacity saturates.
+> **Core Systems Finding & Architectural Distinction**: Tier 1 and Tier 2 evaluated two different team architectures. Tier 1 tested a full 3-agent QA→Coder→Reviewer pipeline, while Tier 2 tested a minimal 2-agent serial handoff with the reviewer stage omitted. This distinction sharpens the empirical finding: **even the cheapest possible team shape — two agents, serial handoff, no review gate — costs ~3x tokens for zero demonstrated benefit on this task.** Latency was at exact parity (155.5s vs 153.8s, 1.01x) because downstream execution was functionally blocked polling for upstream models, and the 160/160 vs 159/160 pass rate was a single defect in Trial 08, not a systematic quality signal. Neither core justification for a team—true parallel concurrency or adversarial review—was exercised on this task.
 
 ---
 
@@ -50,15 +50,15 @@ Detailed transcript GUIDs and per-turn token breakdowns are documented in [docs/
 
 ### Tier 2 Multi-File Service Benchmark ($N=20$, $n=10$ per Arm)
 
-We tested whether multi-agent teams amortize their overhead on a multi-file service (`taskflow`, 5 decoupled modules, ~500 LOC) across 20 automated trials ($n=10$ Pruned Monolith vs. $n=10$ CaveAgents v4) evaluated against 16 held-out adversarial tests:
+We tested whether multi-agent teams amortize their overhead on a multi-file service (`taskflow`, 5 decoupled modules, ~500 LOC) across 20 automated trials ($n=10$ Pruned Monolith vs. $n=10$ CaveAgents v4-lite) evaluated against 16 held-out adversarial tests:
 
 | Architecture ($n=10$) | Mean Tokens ± SD | Multiple vs Control | Wall-Clock Latency | Hidden Adversarial Pass Rate | Flawless Runs |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | **Pruned Monolith Control** | **27,824 ± 5,440** | **1.00x** (Baseline) | **153.8s ± 30.6s** | 159 / 160 (99.38%) | 9 / 10 (90%) |
-| **CaveAgents v4 Team** | **85,782 ± 11,462** | **3.08x** (+208.3%) | **155.5s ± 29.2s** | **160 / 160 (100.00%)** | **10 / 10 (100%)** |
+| **CaveAgents v4-lite (2 Workers, No Review)** | **85,782 ± 11,462** | **3.08x** (+208.3%) | **155.5s ± 29.2s** | **160 / 160 (100.00%)** | **10 / 10 (100%)** |
 
 <p align="center">
-  <img src="assets/chart_tier2_benchmark.png" alt="Tier 2 Multi-File Service Benchmark: Pruned Monolith vs. CaveAgents v4" width="100%"/>
+  <img src="assets/chart_tier2_benchmark.png" alt="Tier 2 Multi-File Service Benchmark: Pruned Monolith vs. CaveAgents v4-lite" width="100%"/>
 </p>
 
 <p align="center">
@@ -66,9 +66,9 @@ We tested whether multi-agent teams amortize their overhead on a multi-file serv
 </p>
 
 - **Did the team win on tokens?** **NO.** Monolith was **3.08x cheaper** (27.8k vs 85.8k tokens). *Directional bias note*: offline step accounting undercounts the monolith's cumulative re-sent history across 30–50 turns more than the team's separate contexts, meaning the true token gap under live API billing is likely narrower than 3.08x.
-- **Did the team win on latency?** **NO.** Wall-clock execution was at **exact parity** (155.5s vs 153.8s, 1.01x). *Transcript audit finding*: execution was **functionally serialized** because `executor.py` had a hard dependency on `models.py`. The Executor worker spent turns 3–41 polling the filesystem until the Foundation worker finished, cancelling out parallel generation speedups.
-- **Did the team win on defect avoidance?** **MARGINAL.** 100.0% vs 99.4% (v4 avoided 1 thread-level timeout cancellation defect in Trial 08, where the monolith failed `test_hidden_timeout_abortion` by letting a slow handler block rather than aborting at timeout).
-- **Topology Note (2-Agent Split, No Reviewer)**: Tier 2 benchmarked a 2-worker division of labor (`foundation` + `executor`), omitting the dedicated 3rd reviewer subagent used in Tier 1. Thus, 3.08x measures the cost of partitioning implementation alone; a 3-agent pipeline would increase this overhead further.
+- **Did the team win on latency?** **NO.** Wall-clock execution was at **exact parity** (155.5s vs 153.8s, 1.01x). A wash, not a win: execution was **functionally serialized** because `executor.py` had a hard dependency on `models.py`. The Executor worker spent turns 3–41 polling the filesystem until the Foundation worker finished, eliminating any parallel speedup.
+- **Did the team win on defect avoidance?** **NO REAL SIGNAL.** 100.0% vs 99.4% is a single test failure in Trial 08 (`test_hidden_timeout_abortion`), well within stochastic run-to-run noise, not a statistically meaningful quality advantage.
+- **Architecture Distinction & The Cost of Minimal Handoff**: Tier 2 evaluated a stripped-down 2-worker variant (**CaveAgents v4-lite**: `foundation` + `executor`), omitting the dedicated 3rd reviewer subagent used in Tier 1. This reframing sharpens the result: **even the cheapest possible team shape — two agents, serial handoff, no review — still costs ~3x tokens for zero demonstrated benefit on this task.** Neither of the two mechanisms that could justify a team (true parallel speedup across independent modules or adversarial review filtering) was exercised.
 
 See [docs/BENCHMARKS.md](docs/BENCHMARKS.md) for full trial records, token decompositions, and statistical distributions.
 
@@ -196,10 +196,11 @@ print(summary)
 ## 🗺️ Future Work & Research Roadmap
 
 - [x] **Pruned-Tool Monolith Control**: Benchmarked single-agent monolith with identical 5-tool pruned registry (**11,381 tokens**, 2.35x cheaper than v4 team).
-- [x] **Statistical Power ($n \ge 10$) & Tier 2 Medium Service Benchmark**: Completed $N=20$ trial empirical study ($n=10$ Pruned Monolith vs $n=10$ CaveAgents v4) on `taskflow` asynchronous multi-file service (~500 LOC across 5 modules). Monolith remained 3.08x cheaper (27.8k vs 85.8k tokens) at latency parity (153.8s vs 155.5s), while v4 team captured 1 marginal edge defect (100% vs 99.4% held-out test pass rate).
+- [x] **Statistical Power ($n=10$) & Tier 2 Minimal Team Benchmark (v4-lite)**: Completed $N=20$ trial empirical study ($n=10$ Pruned Monolith vs $n=10$ CaveAgents v4-lite) on `taskflow` asynchronous multi-file service (~500 LOC across 5 modules). Monolith remained 3.08x cheaper (27.8k vs 85.8k tokens) at latency parity (153.8s vs 155.5s), demonstrating that even the cheapest possible team shape (2 workers, serial handoff, no review) costs 3x for zero demonstrated benefit on this task.
+- [ ] **Empirical Test of Parallelism**: Benchmark a Tier 2 task with genuinely independent modules (no shared interface or type definition that worker B must await from worker A) so workers can execute concurrently without blocking, testing whether true parallel generation achieves a wall-clock speedup that offsets the token coordination tax.
+- [ ] **Empirical Test of Review Efficacy**: Evaluate a full 3-agent Tier 2 team (Foundation + Executor + Reviewer, matching Tier 1's architecture) against an expanded adversarial / mutation test suite large enough to test whether a dedicated review stage produces a statistically meaningful defect catch rate vs. the single agent.
 - [ ] **Native API Billing Telemetry**: Extract exact billed input, output, and cached token metadata directly from Gemini API response headers to evaluate prompt cache hits on schema tokens.
-- [ ] **Tier 3 Large Cross-Package Refactoring Benchmark**: Test whether the coordination tax (2.35x at Tier 1, 3.08x at Tier 2) continues widening, plateaus at ~3x, or finally inverts when monolithic single context limits are saturated.
-- [ ] **Independent Held-Out Mutation Testing**: Evaluate functional correctness against broader mutation coverage and security static analysis across diverse domains.
+- [ ] **Tier 3 Large Cross-Package Refactoring Benchmark**: Test whether the coordination tax continues widening, plateaus at ~3x, or finally inverts when monolithic single context limits are saturated.
 
 ---
 

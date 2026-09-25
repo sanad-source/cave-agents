@@ -25,9 +25,9 @@ This document tracks the version history of CaveAgents from early centralized pr
 | Architecture | Sample Size | Mean Tokens ± SD | Median Tokens | Wall-Clock Latency | Hidden Test Pass Rate | Multiple vs Control |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Pruned Monolith Control** | $n=10$ | **27,824 ± 5,440** | 25,447 | 153.8s ± 30.6s | 159 / 160 (99.38%) | **1.00x** (Baseline) |
-| **CaveAgents v4 Team** | $n=10$ | **85,782 ± 11,462** | 81,602 | 155.5s ± 29.2s | 160 / 160 (100.00%) | **3.08x** (+208.3%) |
+| **CaveAgents v4-lite (2-Worker, No Review)** | $n=10$ | **85,782 ± 11,462** | 81,602 | 155.5s ± 29.2s | 160 / 160 (100.00%) | **3.08x** (+208.3%) |
 
-> **Cross-Tier Scaling Trajectory**: The coordination tax widened from **2.35x (+135.3%)** at Tier 1 to **3.08x (+208.3%)** at Tier 2. Splitting context across decoupled worker modules did not amortize multi-agent overhead; each subagent required redundant prompt ingestion and independent turn loops. Concurrency resulted in exact wall-clock latency parity (1.01x) rather than speedups.
+> **Architecture Distinction & Headline Finding**: Tier 1 evaluated the canonical 3-agent TDD team (**CaveAgents v4**: QA → Coder → Reviewer), while Tier 2 evaluated a stripped-down 2-worker variant (**CaveAgents v4-lite**: Foundation → Executor) with no reviewer stage. Calling both "CaveAgents v4" conflates two distinct architectures. The honest headline: **even the cheapest possible team shape — two agents, serial handoff, no review — costs ~3x tokens for zero demonstrated benefit on this task.** Latency was at exact parity (155.5s vs 153.8s) due to upstream data dependencies causing functional serialization, and the 160/160 vs 159/160 pass rate was a single edge defect, not a systemic quality signal. The two mechanisms that could justify a team—genuine parallel concurrency and adversarial review—remain to be tested.
 
 
 ---
@@ -73,8 +73,8 @@ This document tracks the version history of CaveAgents from early centralized pr
   - **Autonomous Inspection**: Subagents perform surgical symbol lookups rather than consuming upfront bulk context.
   - **Compound Verifications**: Multi-layer hermetic test validation ensuring zero regressions.
   - **Multi-Agent Optimization & The Control Gap**: Total multi-agent token expenditure reached **26,784 tokens** on Tier 1 (81.3% reduction vs Standard Teamwork at 143k tokens), bringing a 3-agent TDD cycle (QA → Coder → Reviewer) below the cost of an unpruned monolithic single agent (**30,241 tokens**). However, under strict experimental control, an identical 5-tool pruned single-agent control achieves **11,381 tokens** (2.35x cheaper than v4). The earlier apparent "Inverted Cost Frontier" was an artifact of a verbose, unpruned baseline: Standard Mono was burdened by both a verbose prompt contract and 16 unused tools, whereas Caveman Mono (which also carried all 16 tools) already beat v4 at 16,285 tokens (1.43x of control).
-  - **Tier 2 Multi-File Service Validation ($n=10$ per Arm, $N=20$)**: Evaluated on an asynchronous service (`taskflow`, ~500 LOC across 5 modules) with 2 parallel workers. CaveAgents v4 averaged **85,782 ± 11,462 tokens** vs. **27,824 ± 5,440 tokens** for Pruned Monolith Control (3.08x tax, +208.3%). Latency reached exact parity (155.5s vs 153.8s, 1.01x), while the team captured 1 edge cancellation bug on held-out tests (100% vs 99.4%).
+  - **Tier 2 Multi-File Service Validation ($n=10$ per Arm, $N=20$)**: Evaluated on an asynchronous service (`taskflow`, ~500 LOC across 5 modules) with **CaveAgents v4-lite (2-worker implementation team, no review stage)**. v4-lite averaged **85,782 ± 11,462 tokens** vs. **27,824 ± 5,440 tokens** for Pruned Monolith Control (3.08x tax, +208.3%). Latency reached exact parity (155.5s vs 153.8s, 1.01x) due to functional serialization (Executor polled waiting for Foundation models), while the 160/160 vs 159/160 pass rate was a single defect in Trial 08, not a systematic quality difference.
 - **Token Results**:
-  - *Tier 1 (Micro Component, 91 LOC)*: **26,784 tokens** (2.35x of control; -81.3% vs Standard Teamwork at 143,219 tokens).
-  - *Tier 2 (Medium Service, ~500 LOC)*: **85,782 tokens** (3.08x of control; 155.5s latency).
+  - *Tier 1 (Micro Component, 91 LOC, 3-Agent v4)*: **26,784 tokens** (2.35x of control; -81.3% vs Standard Teamwork at 143,219 tokens).
+  - *Tier 2 (Medium Service, ~500 LOC, 2-Worker v4-lite)*: **85,782 tokens** (3.08x of control; 155.5s latency).
 
