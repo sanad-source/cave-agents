@@ -9,19 +9,21 @@
 
 ## 📋 Summary
 
-In multi-agent software engineering workflows, team coordination adds significant token overhead: in our benchmark, multi-agent teams expended between 2.35x and 13.62x more tokens than a pruned single-agent control (26,784 to 154,998 vs. 11,381 tokens), driven by inter-agent handoffs, duplicated context loading, and repeated tool schema declarations.
+In multi-agent software engineering workflows, team coordination adds significant token overhead: in our benchmarks, multi-agent teams expended between **2.35x and 13.62x more tokens** than an identical pruned single-agent control (26,784 to 154,998 vs. 11,381 tokens), driven by inter-agent handoffs, duplicate context loading, and repeated tool schema declarations.
 
 **CaveAgents** is an orchestration framework designed to minimize multi-agent coordination overhead through **dynamic tool registry pruning**, **strict context scoping**, and **direct peer-to-peer messaging**.
 
-In benchmark evaluations on a Python rate-limiter task (`TokenBucket`), CaveAgents v4 completes a full 3-agent TDD cycle (QA, Implementation, Code Review) in **26,784 estimated tokens**—an **81.3% reduction** compared to standard unpruned multi-agent workflows (143,219 tokens).
+In empirical evaluations across two distinct software tiers:
+- **Tier 1 (Micro Component, 91 LOC)**: CaveAgents v4 completes a full 3-agent TDD cycle (QA, Implementation, Code Review) in **26,784 estimated tokens**—an **81.3% reduction** compared to standard unpruned multi-agent workflows (143,219 tokens), but **2.35x more expensive** than an identical 5-tool pruned single-agent control (11,381 tokens).
+- **Tier 2 (Medium Asynchronous Service, ~500 LOC, $n=10$ per Arm, $N=20$)**: Evaluated across 20 randomized trials with 16 held-out adversarial tests, CaveAgents v4 averaged **85,782 ± 11,462 tokens** vs. **27,824 ± 5,440 tokens** for the pruned monolith—demonstrating that the multi-agent coordination tax **widened from 2.35x to 3.08x (+208.3%)** rather than amortizing at medium scale. Wall-clock latency reached **exact parity** (155.5s vs 153.8s, 1.01x), while the team captured 1 edge cancellation bug (100% vs 99.4% held-out test pass rate).
 
-> **Control Baseline Note**: On small tasks, an optimized single agent remains significantly cheaper (**11,381 tokens** with pruned tools, 2.35x cheaper than CaveAgents v4) because it pays zero coordination overhead. Tool pruning benefits both single agents and teams; multi-agent architectures offer structural value primarily when task scale requires isolated context domains or parallel code generation.
+> **Core Systems Finding**: On both micro-tasks and multi-file medium services, an optimized single agent remains significantly cheaper (2.35x–3.08x) because it pays zero inter-agent handoff, duplicate prompt ingestion, or supervisor routing overhead. Dynamic tool pruning benefits both single agents and teams equally. The central open frontier is **Tier 3 (Large Cross-Package Refactoring)**: determining whether the coordination tax continues widening, plateaus, or finally inverts when single-context reasoning capacity saturates.
 
 ---
 
 ## 📊 Benchmarks
 
-The following empirical benchmark measures estimated total token expenditure on an identical Python rate limiter class with concurrency test suite (`TokenBucket`):
+### Tier 1 Results: Single Algorithmic Component (`TokenBucket`, 91 LOC, $n=1$)
 
 | Configuration / Architecture | Estimated Total Tokens | Cost vs Pruned Control (1.00x) | Multi-Agent Coordination | Hidden Tests | Description |
 | :--- | :---: | :---: | :---: | :---: | :--- |
@@ -194,10 +196,8 @@ print(summary)
 
 - [x] **Pruned-Tool Monolith Control**: Benchmarked single-agent monolith with identical 5-tool pruned registry (**11,381 tokens**, 2.35x cheaper than v4 team).
 - [x] **Statistical Power ($n \ge 10$) & Tier 2 Medium Service Benchmark**: Completed $N=20$ trial empirical study ($n=10$ Pruned Monolith vs $n=10$ CaveAgents v4) on `taskflow` asynchronous multi-file service (~500 LOC across 5 modules). Monolith remained 3.08x cheaper (27.8k vs 85.8k tokens) at latency parity (153.8s vs 155.5s), while v4 team captured 1 marginal edge defect (100% vs 99.4% held-out test pass rate).
-- [ ] **Native API Billing Telemetry**: Extract exact billed input, output, and cached token metadata directly from Gemini API response headers.
-- [ ] **Multi-Scale Task Evaluation (Tier 3 & 4)**:
-  - *Tier 3 (Large)*: Cross-package refactoring with extensive dependencies.
-  - *Tier 4 (Heterogeneous)*: Full-stack application with frontend UI, backend API, and unit tests.
+- [ ] **Native API Billing Telemetry**: Extract exact billed input, output, and cached token metadata directly from Gemini API response headers to evaluate prompt cache hits on schema tokens.
+- [ ] **Tier 3 Large Cross-Package Refactoring Benchmark**: Test whether the coordination tax (2.35x at Tier 1, 3.08x at Tier 2) continues widening, plateaus at ~3x, or finally inverts when monolithic single context limits are saturated.
 - [ ] **Independent Held-Out Mutation Testing**: Evaluate functional correctness against broader mutation coverage and security static analysis across diverse domains.
 
 ---

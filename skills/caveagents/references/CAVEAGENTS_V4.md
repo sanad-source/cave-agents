@@ -34,11 +34,23 @@ Subagents perform targeted inspection of precise files and symbols rather than l
 Tests are structured with fast failing assertions (`--tb=short`, `-q`), avoiding lengthy error traceback generation in the context window.
 
 ### 4. Multi-Agent Optimization vs. Single-Agent Control
-Multi-agent coordination introduces substantial token overhead compared to single-agent execution: in our benchmark, standard teamwork incurred 12.58x the token cost of a pruned single-agent control. CaveAgents v4 significantly reduces this multi-agent overhead:
-- Standard Teamwork (Live 3-Agent Run, 16 Tools): **143,219 tokens** (12.58x Control)
-- CaveAgents v4 Multi-Agent (Live 3-Agent Sequential TDD Run, 5 Tools): **26,784 tokens** (2.35x Control; 81.3% reduction vs Standard Teamwork)
-- Standard Monolith (Verbose Baseline, 16 Tools): **30,241 tokens** (2.66x Control)
-- Caveman Monolith (Terse Baseline, 16 Tools): **16,285 tokens** (1.43x Control)
-- Pruned Monolith Control (Terse Control, 5 Tools): **11,381 tokens** (1.00x Control Baseline)
 
-> **Key Takeaway**: The apparent "Inverted Cost Frontier" vs Standard Mono was an artifact of a verbose, unpruned baseline: Standard Mono was burdened by both a verbose prompt and 16 unused tools. Caveman Mono (which also carried all 16 tools) already completed the task in 16,285 tokens (1.43x of control), and the 5-tool Pruned Monolith Control completed it in 11,381 tokens (1.00x, 2.35x cheaper than v4). On micro-tasks, single agents pay zero handoff or supervisor coordination overhead.
+Multi-agent coordination introduces substantial token overhead compared to single-agent execution: in our benchmarks, standard teamwork incurred 12.58x the token cost of a pruned single-agent control. CaveAgents v4 significantly reduces this multi-agent overhead through tool pruning and telegraphic messaging, but single-agent monoliths remain structurally cheaper across evaluated scales:
+
+#### Tier 1: Single Algorithmic Component (`TokenBucket`, 91 LOC, $n=1$)
+- **Standard Teamwork** (Live 3-Agent Run, 16 Tools): **143,219 tokens** (12.58x Control)
+- **CaveAgents v4 Team** (Live 3-Agent Sequential TDD Run, 5 Tools): **26,784 tokens** (2.35x Control; 81.3% reduction vs Standard Teamwork)
+- **Standard Monolith** (Verbose Baseline, 16 Tools): **30,241 tokens** (2.66x Control)
+- **Caveman Monolith** (Terse Baseline, 16 Tools): **16,285 tokens** (1.43x Control)
+- **Pruned Monolith Control** (Terse Control, 5 Tools): **11,381 tokens** (1.00x Control Baseline)
+
+#### Tier 2: Multi-File Asynchronous Service (`taskflow`, ~500 LOC, $n=10$ per Arm, $N=20$)
+- **Pruned Monolith Control ($n=10$)**: **27,824 ± 5,440 tokens** (1.00x Baseline), 153.8s ± 30.6s latency, 159/160 hidden tests passed (99.38%).
+- **CaveAgents v4 Team ($n=10$)**: **85,782 ± 11,462 tokens** (3.08x Control, +208.3%), 155.5s ± 29.2s latency, 160/160 hidden tests passed (100.00%).
+- **Expenditure Decomposition**: Foundation worker consumed 29,722 tokens (exceeding the entire monolith), while Executor worker consumed 56,059 tokens.
+
+> **Key Takeaway & Cross-Tier Scaling**:
+> 1. **Widening Coordination Tax**: The coordination tax widened from **2.35x (+135.3%)** at Tier 1 to **3.08x (+208.3%)** at Tier 2. Splitting context across decoupled modules did not overcome the coordination tax; each subagent required redundant prompt ingestion and separate tool turn loops.
+> 2. **Wall-Clock Parity**: Concurrent worker execution achieved exact latency parity (1.01x: 155.5s vs 153.8s). Initialization and messaging roundtrips cancelled out parallel generation speedups.
+> 3. **The Tier 3 Question**: Whether the coordination tax continues widening, plateaus, or inverts on large cross-package refactoring (Tier 3) remains the decisive open question for multi-agent systems.
+

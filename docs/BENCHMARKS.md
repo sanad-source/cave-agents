@@ -2,15 +2,19 @@
 
 ## Overview
 
-This document presents empirical results and benchmark evaluation data measuring total token usage across multiple agent frameworks and configurations performing an identical Python rate limiter implementation and concurrency test task (`TokenBucket`).
+This document presents empirical benchmark evaluation data measuring total token usage, wall-clock latency, and held-out adversarial correctness across multiple agent frameworks and configurations evaluated across two distinct task tiers:
 
-All benchmarks were evaluated under identical task scopes, repository environments, test harness conditions, and model foundations (Google Gemini 3.8 Flash, with offline `tiktoken cl100k_base` accounting).
+1. **Tier 1 (Micro Component, $n=1$)**: Single-file algorithmic rate limiter and concurrency test suite (`TokenBucket`, 91 LOC), tracking the evolution from early centralized team prototypes (AgentTeams, CaveAgents v1–v3) to optimized v4 and monolithic baselines.
+2. **Tier 2 (Medium Asynchronous Service, $n=10$ per Arm, $N=20$)**: Multi-file asynchronous job scheduler service (`taskflow`, ~500 LOC across 5 decoupled modules), evaluating statistical distributions (mean, median, SD) of Pruned Monolith Control vs. CaveAgents v4 Team with parallel workers.
+
+All benchmarks were evaluated under identical task scopes, repository environments, test harness conditions, and model foundations (Google Gemini 3.8 Flash, with offline `tiktoken cl100k_base` accounting and modeled tool schema constants).
 
 ---
 
-## Results Table
+## Tier 1 Results: Single Algorithmic Component (`TokenBucket`)
 
 | Architecture / Framework | Real Transcript / Run GUID | Input Tokens | Output Tokens | Estimated Total Tokens | Multiple vs Pruned Control (1.00x) | Multi-Agent Coordination | Hidden Tests (Held-Out) |
+
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Pruned Mono (Control)** | `b9942f2c-a8a9-4f48-ae0c-687a832c1d6e` | 9,281 | 2,100 | **11,381** | **1.00x** (Baseline) | None (1 Agent, 5 Tools) | **7/7 Passed** (100%) |
 | **Caveman Mono** | `9a1b3ca8-9267-4169-a201-3f9f1434aed5` | 13,905 | 2,380 | **16,285** | **1.43x** (+43.1%) | None (1 Agent, 16 Tools) | **7/7 Passed** (100%) |
@@ -161,10 +165,25 @@ All 20 trials were executed live under automated harness control. Transcripts an
 
 ## 🔬 Limitations & Threats to Validity
 
-1. **Offline Modeled & Measured Accounting & Directional Bias**: Reported token totals are modeled estimates rather than native API billing telemetry. They combine dialogue tokens (measured offline via `tiktoken cl100k_base` on transcript steps) with fixed modeled tool schema constants (~2,480 tokens/turn for 16 tools, ~380 tokens/turn for 5 tools). Cumulative conversational history re-sent on successive turns is estimated rather than extracted from live provider billing headers.
-   - **Directionality of Accounting Bias**: The direction of this estimation error is structurally asymmetric. A monolithic agent carries a single growing context that gets re-sent and billed on every step turn, whereas a multi-agent team splits work into shorter, freshly initialized subagent contexts. If re-sent cumulative history is under-counted by offline step parsing, the monolith is likely under-counted to a greater degree than the multi-agent team. Consequently, the measured control gap may be overstated for tasks requiring deep monolithic turn depth, and the crossover point where teams become cost-competitive may occur earlier than these static estimates suggest. Native API response telemetry is essential before drawing definitive conclusions on larger tasks.
+1. **Accounting Methodology & Exact Parity Across Tiers**:
+   - Both Tier 1 and Tier 2 use the identical accounting methodology:
+     $$\text{Estimated Total Tokens} = \text{Measured Dialogue Tokens} + (\text{Turns} \times \text{Schema Constant})$$
+   - Dialogue tokens are measured offline using `tiktoken` (`cl100k_base` encoding) directly across step turns in each execution transcript (`transcript.jsonl`).
+   - Tool schema tokens are added as a fixed modeled constant per turn based on the declared tool definitions (~380 tokens/turn for the 5-tool pruned registry; ~2,480 tokens/turn for the 16-tool standard registry).
+   - **Limitations of Modeled Schema Accounting**:
+     - *No Server-Side Prompt Caching*: In live API billing, system instructions and static tool schemas reside in prompt prefixes eligible for server-side cache discounts (typically 75%–80% off on Gemini and Anthropic). Thus, while tool pruning saves ~2,100 un-cached tokens per step on paper, the net billing dollar reduction is smaller when prompt caching is active.
+     - *Directionality of Estimation Error*: The offline step parser counts unique step payloads. If cumulative context history re-sent across successive turns is under-counted, the single monolith (which accumulates context across 30–50 turns) is under-counted to a greater degree than multi-agent teams (which split context into separate subagent sessions). Consequently, the true gap between monolith and team may be slightly narrower under live API billing telemetry than modeled offline.
+
 2. **Task Scope & Amortization Crossover**: The Tier 1 rate-limiter (91 LOC) and Tier 2 asynchronous service (~500 LOC) represent small-to-medium software scopes. On both benchmarks, the monolithic single agent maintained a decisive token advantage (2.35x and 3.08x cheaper). A crossover point where multi-agent teams achieve lower total tokens or faster wall-clock completion was not observed at these scopes, demonstrating that team coordination overhead cannot be justified on tasks below context-window saturation limits.
+
 3. **Reviewer Efficacy vs. Coordination Tax**: While the multi-agent team achieved 100% pass rates across 160 adversarial edge tests in Tier 2 (vs 99.4% for monolith), the coordination cost was substantial (+208.3% tokens). Multi-agent teams should only be deployed when absolute defect avoidance outweighs a 3x token tax or when tasks exceed the effective context reasoning limit of single frontier models.
+
+4. **The Tier 3 (Cross-Package Refactor) Empirical Frontier**:
+   Given that the coordination tax widened from **2.35x (+135.3%)** at Tier 1 to **3.08x (+208.3%)** at Tier 2, the decisive empirical question is how this tax behaves at Tier 3 (large cross-package refactoring with extensive dependencies):
+   - **Hypothesis A (Continuous Divergence)**: The coordination tax continues to widen (e.g. 4x–6x) because duplicated interface definitions, cross-worker synchronization, and handoff overhead compound super-linearly with dependency depth.
+   - **Hypothesis B (Plateau)**: The coordination tax asymptotes around ~3x–3.5x as the baseline overhead of multi-agent communication.
+   - **Hypothesis C (Context Saturation Inversion)**: Monolithic turn depth exceeds single context reasoning limits, causing catastrophic degradation or hallucinated refactors, making multi-agent team partitioning strictly superior.
+   - **Hypothesis D (Architectural Requirement)**: Beating a frontier monolith requires abandoning conversational LLM message-passing entirely in favor of compile-time AST contracts and isolated worktree branches with zero redundant spec ingestion.
 
 ---
 

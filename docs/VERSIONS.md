@@ -6,7 +6,9 @@ This document tracks the version history of CaveAgents from early centralized pr
 
 ## Comparison
 
-| Version | Core Architecture | Coordination Mechanism | Tool Registry | Estimated Tokens | Multiple vs Pruned Control (1.00x) |
+### Tier 1 Benchmark: Single Algorithmic Component (`TokenBucket`, 91 LOC, $n=1$)
+
+| Version / Configuration | Core Architecture | Coordination Mechanism | Tool Registry | Estimated Tokens | Multiple vs Pruned Control (1.00x) |
 | :--- | :--- | :--- | :--- | :---: | :---: |
 | **Pruned Mono Control** | Single Agent | N/A (Control Arm) | Dynamic Role-Pruned (5 Tools) | **11,381** | **1.00x** (Baseline Control) |
 | **Caveman Mono Baseline** | Single Agent | N/A (Terse Prompting) | Static (16 Tools) | 16,285 | **1.43x** |
@@ -17,6 +19,16 @@ This document tracks the version history of CaveAgents from early centralized pr
 | **v1** | Serial Pipeline | Centralized Captain Relay | Static (16 Tools) | 109,984 | **9.66x** |
 | **Standard Teamwork (Live)** | Star Mesh | Unconstrained Conversational | Static (16 Tools) | 143,219 | **12.58x** |
 | **AgentTeams Baseline** | Centralized DAG | Structured Conversational | Static (16 Tools) | 154,998 | **13.62x** |
+
+### Tier 2 Benchmark: Multi-File Asynchronous Service (`taskflow`, ~500 LOC, $n=10$ per Arm, $N=20$)
+
+| Architecture | Sample Size | Mean Tokens ± SD | Median Tokens | Wall-Clock Latency | Hidden Test Pass Rate | Multiple vs Control |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Pruned Monolith Control** | $n=10$ | **27,824 ± 5,440** | 25,447 | 153.8s ± 30.6s | 159 / 160 (99.38%) | **1.00x** (Baseline) |
+| **CaveAgents v4 Team** | $n=10$ | **85,782 ± 11,462** | 81,602 | 155.5s ± 29.2s | 160 / 160 (100.00%) | **3.08x** (+208.3%) |
+
+> **Cross-Tier Scaling Trajectory**: The coordination tax widened from **2.35x (+135.3%)** at Tier 1 to **3.08x (+208.3%)** at Tier 2. Splitting context across decoupled worker modules did not amortize multi-agent overhead; each subagent required redundant prompt ingestion and independent turn loops. Concurrency resulted in exact wall-clock latency parity (1.01x) rather than speedups.
+
 
 ---
 
@@ -60,5 +72,9 @@ This document tracks the version history of CaveAgents from early centralized pr
   - **Dynamic Tool Pruning**: Defined subagents with role-specific tool subsets via `define_subagent`. Dropped unused tools (e.g. web search, browsers, image generators, notebooks), reducing per-turn tool schema injection from ~2,480 down to ~380 tokens (~2,100 tokens saved per turn).
   - **Autonomous Inspection**: Subagents perform surgical symbol lookups rather than consuming upfront bulk context.
   - **Compound Verifications**: Multi-layer hermetic test validation ensuring zero regressions.
-  - **Multi-Agent Optimization & The Control Gap**: Total multi-agent token expenditure reached **26,784 tokens** (81.3% reduction vs Standard Teamwork at 143k tokens), bringing a 3-agent TDD cycle (QA → Coder → Reviewer) below the cost of an unpruned monolithic single agent (**30,241 tokens**). However, under strict experimental control, an identical 5-tool pruned single-agent control achieves **11,381 tokens** (2.35x cheaper than v4). The earlier apparent "Inverted Cost Frontier" was an artifact of a verbose, unpruned baseline: Standard Mono was burdened by both a verbose prompt contract and 16 unused tools, whereas Caveman Mono (which also carried all 16 tools) already beat v4 at 16,285 tokens (1.43x of control). On micro-tasks, single agents pay zero handoff or supervisor coordination overhead.
-- **Token Result**: **26,784 tokens** (81.3% reduction vs Standard Teamwork Live run at 143,219 tokens).
+  - **Multi-Agent Optimization & The Control Gap**: Total multi-agent token expenditure reached **26,784 tokens** on Tier 1 (81.3% reduction vs Standard Teamwork at 143k tokens), bringing a 3-agent TDD cycle (QA → Coder → Reviewer) below the cost of an unpruned monolithic single agent (**30,241 tokens**). However, under strict experimental control, an identical 5-tool pruned single-agent control achieves **11,381 tokens** (2.35x cheaper than v4). The earlier apparent "Inverted Cost Frontier" was an artifact of a verbose, unpruned baseline: Standard Mono was burdened by both a verbose prompt contract and 16 unused tools, whereas Caveman Mono (which also carried all 16 tools) already beat v4 at 16,285 tokens (1.43x of control).
+  - **Tier 2 Multi-File Service Validation ($n=10$ per Arm, $N=20$)**: Evaluated on an asynchronous service (`taskflow`, ~500 LOC across 5 modules) with 2 parallel workers. CaveAgents v4 averaged **85,782 ± 11,462 tokens** vs. **27,824 ± 5,440 tokens** for Pruned Monolith Control (3.08x tax, +208.3%). Latency reached exact parity (155.5s vs 153.8s, 1.01x), while the team captured 1 edge cancellation bug on held-out tests (100% vs 99.4%).
+- **Token Results**:
+  - *Tier 1 (Micro Component, 91 LOC)*: **26,784 tokens** (2.35x of control; -81.3% vs Standard Teamwork at 143,219 tokens).
+  - *Tier 2 (Medium Service, ~500 LOC)*: **85,782 tokens** (3.08x of control; 155.5s latency).
+
