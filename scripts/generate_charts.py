@@ -30,8 +30,8 @@ def generate_benchmark_chart() -> Path:
     tokens = [11381, 16285, 26784, 30241, 50395, 91432, 109984, 143219, 154998]
     import matplotlib.patches as mpatches
 
-    COLOR_SINGLE = "#0284c7"  # Sky blue for single-agent architectures
-    COLOR_TEAM = "#7c3aed"    # Purple for multi-agent team architectures
+    COLOR_SINGLE = "#1d4ed8"  # High-contrast Cobalt Blue for single-agent architectures
+    COLOR_TEAM = "#e11d48"    # High-contrast Crimson/Coral for multi-agent team architectures
 
     colors = [
         COLOR_SINGLE,  # Pruned Monolith Control (Single)

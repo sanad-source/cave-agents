@@ -32,28 +32,33 @@ v4_hid = [r["test_results"]["hidden"]["passed"] for r in v4_records]
 plt.style.use("seaborn-v0_8-whitegrid" if "seaborn-v0_8-whitegrid" in plt.style.available else "default")
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5.8), dpi=300)
 
-COLOR_MONO = "#0284c7"  # Blue for single agent
-COLOR_V4 = "#7c3aed"    # Purple for multi-agent team
+COLOR_MONO = "#1d4ed8"  # High-contrast Cobalt Blue for single agent
+COLOR_V4 = "#e11d48"    # High-contrast Crimson/Coral for multi-agent team
 
 # Subplot 1: Token Expenditure Distribution
 bp1 = ax1.boxplot(
     [mono_tokens, v4_tokens],
     tick_labels=["Pruned Mono (Control)\n[n=10]", "CaveAgents v4-lite (2-Worker Team)\n[No Reviewer, n=10]"],
     patch_artist=True,
-    widths=0.45,
-    boxprops=dict(linewidth=1.2),
-    medianprops=dict(color="#0f172a", linewidth=2.0)
+    widths=0.42,
+    showfliers=False,
+    boxprops=dict(linewidth=1.4, edgecolor="#0f172a"),
+    whiskerprops=dict(linewidth=1.2, color="#0f172a"),
+    capprops=dict(linewidth=1.2, color="#0f172a"),
+    medianprops=dict(color="#ffffff", linewidth=2.5)
 )
 bp1["boxes"][0].set_facecolor(COLOR_MONO)
-bp1["boxes"][0].set_alpha(0.85)
+bp1["boxes"][0].set_alpha(0.88)
 bp1["boxes"][1].set_facecolor(COLOR_V4)
-bp1["boxes"][1].set_alpha(0.85)
+bp1["boxes"][1].set_alpha(0.88)
 
-# Overlay individual trial points
+# Overlay individual trial points with distinct marker shapes and contrast rims
 np.random.seed(42)
-for i, tokens in enumerate([mono_tokens, v4_tokens]):
-    x = np.random.normal(i + 1, 0.04, size=len(tokens))
-    ax1.plot(x, tokens, "o", color="#0f172a", alpha=0.7, markersize=6)
+x_mono = np.random.normal(1, 0.04, size=len(mono_tokens))
+ax1.plot(x_mono, mono_tokens, "o", markerfacecolor="#93c5fd", markeredgecolor="#0f172a", markeredgewidth=1.2, markersize=7.5, alpha=0.95, zorder=5)
+
+x_v4 = np.random.normal(2, 0.04, size=len(v4_tokens))
+ax1.plot(x_v4, v4_tokens, "D", markerfacecolor="#fca5a5", markeredgecolor="#0f172a", markeredgewidth=1.2, markersize=7.0, alpha=0.95, zorder=5)
 
 mono_mean = np.mean(mono_tokens)
 v4_mean = np.mean(v4_tokens)
@@ -68,18 +73,25 @@ bp2 = ax2.boxplot(
     [mono_lat, v4_lat],
     tick_labels=["Pruned Mono (Control)\n[n=10]", "CaveAgents v4-lite (2-Worker Team)\n[No Reviewer, n=10]"],
     patch_artist=True,
-    widths=0.45,
-    boxprops=dict(linewidth=1.2),
-    medianprops=dict(color="#0f172a", linewidth=2.0)
+    widths=0.42,
+    showfliers=False,
+    boxprops=dict(linewidth=1.4, edgecolor="#0f172a"),
+    whiskerprops=dict(linewidth=1.2, color="#0f172a"),
+    capprops=dict(linewidth=1.2, color="#0f172a"),
+    medianprops=dict(color="#ffffff", linewidth=2.5)
 )
 bp2["boxes"][0].set_facecolor(COLOR_MONO)
-bp2["boxes"][0].set_alpha(0.85)
+bp2["boxes"][0].set_alpha(0.88)
 bp2["boxes"][1].set_facecolor(COLOR_V4)
-bp2["boxes"][1].set_alpha(0.85)
+bp2["boxes"][1].set_alpha(0.88)
 
-for i, lats in enumerate([mono_lat, v4_lat]):
-    x = np.random.normal(i + 1, 0.04, size=len(lats))
-    ax2.plot(x, lats, "o", color="#0f172a", alpha=0.7, markersize=6)
+# Overlay individual trial latency points
+np.random.seed(42)
+x_mono_lat = np.random.normal(1, 0.04, size=len(mono_lat))
+ax2.plot(x_mono_lat, mono_lat, "o", markerfacecolor="#93c5fd", markeredgecolor="#0f172a", markeredgewidth=1.2, markersize=7.5, alpha=0.95, zorder=5)
+
+x_v4_lat = np.random.normal(2, 0.04, size=len(v4_lat))
+ax2.plot(x_v4_lat, v4_lat, "D", markerfacecolor="#fca5a5", markeredgecolor="#0f172a", markeredgewidth=1.2, markersize=7.0, alpha=0.95, zorder=5)
 
 mono_lat_mean = np.mean(mono_lat)
 v4_lat_mean = np.mean(v4_lat)
@@ -88,8 +100,8 @@ lat_ratio = v4_lat_mean / mono_lat_mean
 ax2.set_ylabel("Wall-Clock Latency (Seconds)", fontsize=11, fontweight="bold")
 ax2.set_title(f"Wall-Clock Execution Time: Parity at {lat_ratio:.2f}x ({v4_lat_mean:.1f}s vs {mono_lat_mean:.1f}s)\n[Functionally Serialized: Executor Polled Waiting for Foundation Models]", fontsize=11, fontweight="bold")
 
-patch_mono = mpatches.Patch(facecolor=COLOR_MONO, edgecolor="#1e293b", label="Pruned Single Agent (159/160 passed; 1 timeout cancellation defect in T08)")
-patch_v4 = mpatches.Patch(facecolor=COLOR_V4, edgecolor="#1e293b", label="CaveAgents v4-lite (2 Workers: Foundation + Executor, No Review; 160/160 passed)")
+patch_mono = mpatches.Patch(facecolor=COLOR_MONO, edgecolor="#0f172a", label="Pruned Single Agent (159/160 passed; 1 timeout cancellation defect in T08)")
+patch_v4 = mpatches.Patch(facecolor=COLOR_V4, edgecolor="#0f172a", label="CaveAgents v4-lite (2 Workers: Foundation + Executor, No Review; 160/160 passed)")
 fig.legend(handles=[patch_mono, patch_v4], loc="lower center", ncol=2, frameon=True, fontsize=10, bbox_to_anchor=(0.5, -0.06))
 
 plt.suptitle("Tier 2 Multi-File Service Benchmark: Pruned Monolith vs. CaveAgents v4-lite (n=10 per Arm, N=20 Total)", fontsize=13, fontweight="bold", y=1.02)
