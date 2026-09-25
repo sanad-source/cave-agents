@@ -1,0 +1,742 @@
+[
+  {
+    "arm": "pruned_mono",
+    "trial_idx": 1,
+    "timestamp": "2026-09-24T21:05:59Z",
+    "wall_clock_sec": 225.0,
+    "transcript_guid": "334266de-6918-4107-ab9f-d2da881fc57a",
+    "token_metrics": {
+      "turns": 50,
+      "dialogue_tokens": 21425,
+      "schema_tokens": 19000,
+      "total_tokens": 40425
+    },
+    "test_results": {
+      "visible": {
+        "exit_code": 0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "summary": "5 passed in 0.23s"
+      },
+      "hidden": {
+        "exit_code": 0,
+        "passed": 16,
+        "failed": 0,
+        "total": 16,
+        "summary": "16 passed in 3.01s"
+      }
+    }
+  },
+  {
+    "arm": "caveagents_v4",
+    "trial_idx": 1,
+    "timestamp": "2026-09-24T21:05:59Z",
+    "wall_clock_sec": 230.0,
+    "transcript_guid": "76e2f4dc / c7a7ade5",
+    "token_metrics": {
+      "turns": 104,
+      "dialogue_tokens": 38399,
+      "schema_tokens": 39520,
+      "total_tokens": 77919,
+      "subagents": {
+        "foundation": {
+          "guid": "76e2f4dc-2fa9-4f75-8d20-b151eff817bc",
+          "turns": 28,
+          "dialogue_tokens": 11399,
+          "schema_tokens": 10640,
+          "total_tokens": 22039
+        },
+        "executor": {
+          "guid": "c7a7ade5-71c4-4a94-ad76-b1863341c1f1",
+          "turns": 76,
+          "dialogue_tokens": 27000,
+          "schema_tokens": 28880,
+          "total_tokens": 55880
+        }
+      }
+    },
+    "test_results": {
+      "visible": {
+        "exit_code": 0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "summary": "5 passed in 0.24s"
+      },
+      "hidden": {
+        "exit_code": 0,
+        "passed": 16,
+        "failed": 0,
+        "total": 16,
+        "summary": "16 passed in 3.00s"
+      }
+    }
+  },
+  {
+    "arm": "pruned_mono",
+    "trial_idx": 2,
+    "timestamp": "2026-09-24T21:09:11Z",
+    "wall_clock_sec": 138.0,
+    "transcript_guid": "f47bb6f1-7c49-46c2-819f-7349df235c53",
+    "token_metrics": {
+      "turns": 30,
+      "dialogue_tokens": 12115,
+      "schema_tokens": 11400,
+      "total_tokens": 23515
+    },
+    "test_results": {
+      "visible": {
+        "exit_code": 0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "summary": "5 passed in 0.46s"
+      },
+      "hidden": {
+        "exit_code": 0,
+        "passed": 16,
+        "failed": 0,
+        "total": 16,
+        "summary": "16 passed in 3.68s"
+      }
+    }
+  },
+  {
+    "arm": "caveagents_v4",
+    "trial_idx": 2,
+    "timestamp": "2026-09-24T21:09:20Z",
+    "wall_clock_sec": 157.0,
+    "transcript_guid": "cfc1b068 / b02309d3",
+    "token_metrics": {
+      "turns": 103,
+      "dialogue_tokens": 39340,
+      "schema_tokens": 39140,
+      "total_tokens": 78480,
+      "subagents": {
+        "foundation": {
+          "guid": "cfc1b068-2ef3-4940-af54-05edc6e2a672",
+          "turns": 43,
+          "dialogue_tokens": 17064,
+          "schema_tokens": 16340,
+          "total_tokens": 33404
+        },
+        "executor": {
+          "guid": "b02309d3-4b2b-43d7-b263-ce8e32eef6d2",
+          "turns": 60,
+          "dialogue_tokens": 22276,
+          "schema_tokens": 22800,
+          "total_tokens": 45076
+        }
+      }
+    },
+    "test_results": {
+      "visible": {
+        "exit_code": 0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "summary": "5 passed in 0.23s"
+      },
+      "hidden": {
+        "exit_code": 0,
+        "passed": 16,
+        "failed": 0,
+        "total": 16,
+        "summary": "16 passed in 3.01s"
+      }
+    }
+  },
+  {
+    "arm": "pruned_mono",
+    "trial_idx": 3,
+    "timestamp": "2026-09-24T21:09:52Z",
+    "wall_clock_sec": 180.0,
+    "transcript_guid": "4c976ea3-549a-4656-8860-98700ac10624",
+    "token_metrics": {
+      "turns": 34,
+      "dialogue_tokens": 13070,
+      "schema_tokens": 12920,
+      "total_tokens": 25990
+    },
+    "test_results": {
+      "visible": {
+        "exit_code": 0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "summary": "5 passed in 0.24s"
+      },
+      "hidden": {
+        "exit_code": 0,
+        "passed": 16,
+        "failed": 0,
+        "total": 16,
+        "summary": "16 passed in 3.00s"
+      }
+    }
+  },
+  {
+    "arm": "pruned_mono",
+    "trial_idx": 4,
+    "timestamp": "2026-09-24T21:12:32Z",
+    "wall_clock_sec": 129.0,
+    "transcript_guid": "fc63d9bb-7312-4388-9599-cc3e6a9b70fe",
+    "token_metrics": {
+      "turns": 28,
+      "dialogue_tokens": 12897,
+      "schema_tokens": 10640,
+      "total_tokens": 23537
+    },
+    "test_results": {
+      "visible": {
+        "exit_code": 0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "summary": "5 passed in 0.13s"
+      },
+      "hidden": {
+        "exit_code": 0,
+        "passed": 16,
+        "failed": 0,
+        "total": 16,
+        "summary": "16 passed in 2.71s"
+      }
+    }
+  },
+  {
+    "arm": "caveagents_v4",
+    "trial_idx": 4,
+    "timestamp": "2026-09-24T21:12:41Z",
+    "wall_clock_sec": 148.0,
+    "transcript_guid": "e401f88b / 11039d9e",
+    "token_metrics": {
+      "turns": 120,
+      "dialogue_tokens": 46996,
+      "schema_tokens": 45600,
+      "total_tokens": 92596,
+      "subagents": {
+        "foundation": {
+          "guid": "e401f88b-2711-4625-b306-439bf4d3eb86",
+          "turns": 48,
+          "dialogue_tokens": 19181,
+          "schema_tokens": 18240,
+          "total_tokens": 37421
+        },
+        "executor": {
+          "guid": "11039d9e-65b7-45f8-9785-39594fc90845",
+          "turns": 72,
+          "dialogue_tokens": 27815,
+          "schema_tokens": 27360,
+          "total_tokens": 55175
+        }
+      }
+    },
+    "test_results": {
+      "visible": {
+        "exit_code": 0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "summary": "5 passed in 0.23s"
+      },
+      "hidden": {
+        "exit_code": 0,
+        "passed": 16,
+        "failed": 0,
+        "total": 16,
+        "summary": "16 passed in 2.99s"
+      }
+    }
+  },
+  {
+    "arm": "caveagents_v4",
+    "trial_idx": 3,
+    "timestamp": "2026-09-24T21:12:42Z",
+    "wall_clock_sec": 149.0,
+    "transcript_guid": "19678c4a / 2f829d83",
+    "token_metrics": {
+      "turns": 110,
+      "dialogue_tokens": 40434,
+      "schema_tokens": 41800,
+      "total_tokens": 82234,
+      "subagents": {
+        "foundation": {
+          "guid": "19678c4a-1648-4dd2-996e-23e2328e4164",
+          "turns": 32,
+          "dialogue_tokens": 12544,
+          "schema_tokens": 12160,
+          "total_tokens": 24704
+        },
+        "executor": {
+          "guid": "2f829d83-f79e-4253-aab2-b32181df12eb",
+          "turns": 78,
+          "dialogue_tokens": 27890,
+          "schema_tokens": 29640,
+          "total_tokens": 57530
+        }
+      }
+    },
+    "test_results": {
+      "visible": {
+        "exit_code": 0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "summary": "5 passed in 0.23s"
+      },
+      "hidden": {
+        "exit_code": 0,
+        "passed": 16,
+        "failed": 0,
+        "total": 16,
+        "summary": "16 passed in 2.99s"
+      }
+    }
+  },
+  {
+    "arm": "pruned_mono",
+    "trial_idx": 5,
+    "timestamp": "2026-09-24T21:13:12Z",
+    "wall_clock_sec": 157.0,
+    "transcript_guid": "b9245cdd-dd52-44d0-9351-2325c8f3721e",
+    "token_metrics": {
+      "turns": 28,
+      "dialogue_tokens": 12629,
+      "schema_tokens": 10640,
+      "total_tokens": 23269
+    },
+    "test_results": {
+      "visible": {
+        "exit_code": 0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "summary": "5 passed in 0.24s"
+      },
+      "hidden": {
+        "exit_code": 0,
+        "passed": 16,
+        "failed": 0,
+        "total": 16,
+        "summary": "16 passed in 3.00s"
+      }
+    }
+  },
+  {
+    "arm": "pruned_mono",
+    "trial_idx": 6,
+    "timestamp": "2026-09-25T00:51:50Z",
+    "wall_clock_sec": 118.0,
+    "transcript_guid": "9dd4fc92-846b-47e1-abc3-09c79988df31",
+    "token_metrics": {
+      "turns": 30,
+      "dialogue_tokens": 13503,
+      "schema_tokens": 11400,
+      "total_tokens": 24903
+    },
+    "test_results": {
+      "visible": {
+        "exit_code": 0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "summary": "5 passed in 0.24s"
+      },
+      "hidden": {
+        "exit_code": 0,
+        "passed": 16,
+        "failed": 0,
+        "total": 16,
+        "summary": "16 passed in 3.05s"
+      }
+    }
+  },
+  {
+    "arm": "caveagents_v4",
+    "trial_idx": 5,
+    "timestamp": "2026-09-25T00:51:53Z",
+    "wall_clock_sec": 119.0,
+    "transcript_guid": "835bf341 / 4868c38b",
+    "token_metrics": {
+      "turns": 118,
+      "dialogue_tokens": 43507,
+      "schema_tokens": 44840,
+      "total_tokens": 88347,
+      "subagents": {
+        "foundation": {
+          "guid": "835bf341-681a-47fb-aaed-0f4bd1898711",
+          "turns": 38,
+          "dialogue_tokens": 14063,
+          "schema_tokens": 14440,
+          "total_tokens": 28503
+        },
+        "executor": {
+          "guid": "4868c38b-8176-4e72-a2c5-1fb89198ee62",
+          "turns": 80,
+          "dialogue_tokens": 29444,
+          "schema_tokens": 30400,
+          "total_tokens": 59844
+        }
+      }
+    },
+    "test_results": {
+      "visible": {
+        "exit_code": 0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "summary": "5 passed in 0.23s"
+      },
+      "hidden": {
+        "exit_code": 0,
+        "passed": 16,
+        "failed": 0,
+        "total": 16,
+        "summary": "16 passed in 3.05s"
+      }
+    }
+  },
+  {
+    "arm": "pruned_mono",
+    "trial_idx": 7,
+    "timestamp": "2026-09-25T03:36:32Z",
+    "wall_clock_sec": 126.0,
+    "transcript_guid": "d1e46e4c-5ec6-4a19-beca-2f39968b1ee5",
+    "token_metrics": {
+      "turns": 43,
+      "dialogue_tokens": 17954,
+      "schema_tokens": 16340,
+      "total_tokens": 34294
+    },
+    "test_results": {
+      "visible": {
+        "exit_code": 0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "summary": "5 passed in 0.25s"
+      },
+      "hidden": {
+        "exit_code": 0,
+        "passed": 16,
+        "failed": 0,
+        "total": 16,
+        "summary": "16 passed in 4.94s"
+      }
+    }
+  },
+  {
+    "arm": "pruned_mono",
+    "trial_idx": 8,
+    "timestamp": "2026-09-25T04:24:44Z",
+    "wall_clock_sec": 134.0,
+    "transcript_guid": "39f6856b-4a04-467d-9889-ba7e3fb3d930",
+    "token_metrics": {
+      "turns": 31,
+      "dialogue_tokens": 11581,
+      "schema_tokens": 11780,
+      "total_tokens": 23361
+    },
+    "test_results": {
+      "visible": {
+        "exit_code": 0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "summary": "5 passed in 0.43s"
+      },
+      "hidden": {
+        "exit_code": 1,
+        "passed": 15,
+        "failed": 1,
+        "total": 16,
+        "summary": "1 failed, 15 passed in 5.45s"
+      }
+    }
+  },
+  {
+    "arm": "caveagents_v4",
+    "trial_idx": 6,
+    "timestamp": "2026-09-25T04:27:30Z",
+    "wall_clock_sec": 142.0,
+    "transcript_guid": "407bf1fc / 42e7b0b0",
+    "token_metrics": {
+      "turns": 143,
+      "dialogue_tokens": 51301,
+      "schema_tokens": 54340,
+      "total_tokens": 105641,
+      "subagents": {
+        "foundation": {
+          "guid": "407bf1fc-95ac-4b6e-b57c-9965b360ef9f",
+          "turns": 43,
+          "dialogue_tokens": 15567,
+          "schema_tokens": 16340,
+          "total_tokens": 31907
+        },
+        "executor": {
+          "guid": "42e7b0b0-af8d-4bf8-bfb1-ba872c349879",
+          "turns": 100,
+          "dialogue_tokens": 35734,
+          "schema_tokens": 38000,
+          "total_tokens": 73734
+        }
+      }
+    },
+    "test_results": {
+      "visible": {
+        "exit_code": 0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "summary": "5 passed in 0.24s"
+      },
+      "hidden": {
+        "exit_code": 0,
+        "passed": 16,
+        "failed": 0,
+        "total": 16,
+        "summary": "16 passed in 3.01s"
+      }
+    }
+  },
+  {
+    "arm": "caveagents_v4",
+    "trial_idx": 7,
+    "timestamp": "2026-09-25T04:30:34Z",
+    "wall_clock_sec": 163.0,
+    "transcript_guid": "3a4d5ae3 / 2a0a81e3",
+    "token_metrics": {
+      "turns": 136,
+      "dialogue_tokens": 52822,
+      "schema_tokens": 51680,
+      "total_tokens": 104502,
+      "subagents": {
+        "foundation": {
+          "guid": "3a4d5ae3-98a6-41af-a654-d67f8e89bc06",
+          "turns": 50,
+          "dialogue_tokens": 22008,
+          "schema_tokens": 19000,
+          "total_tokens": 41008
+        },
+        "executor": {
+          "guid": "2a0a81e3-7f43-4dca-9e95-f149d0c8a63f",
+          "turns": 86,
+          "dialogue_tokens": 30814,
+          "schema_tokens": 32680,
+          "total_tokens": 63494
+        }
+      }
+    },
+    "test_results": {
+      "visible": {
+        "exit_code": 0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "summary": "5 passed in 0.23s"
+      },
+      "hidden": {
+        "exit_code": 0,
+        "passed": 16,
+        "failed": 0,
+        "total": 16,
+        "summary": "16 passed in 2.99s"
+      }
+    }
+  },
+  {
+    "arm": "pruned_mono",
+    "trial_idx": 9,
+    "timestamp": "2026-09-25T04:30:59Z",
+    "wall_clock_sec": 165.0,
+    "transcript_guid": "b9e1595d-c4fb-49c3-8859-22512288e4a5",
+    "token_metrics": {
+      "turns": 38,
+      "dialogue_tokens": 15452,
+      "schema_tokens": 14440,
+      "total_tokens": 29892
+    },
+    "test_results": {
+      "visible": {
+        "exit_code": 0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "summary": "5 passed in 0.14s"
+      },
+      "hidden": {
+        "exit_code": 0,
+        "passed": 16,
+        "failed": 0,
+        "total": 16,
+        "summary": "16 passed in 4.56s"
+      }
+    }
+  },
+  {
+    "arm": "pruned_mono",
+    "trial_idx": 10,
+    "timestamp": "2026-09-25T04:31:09Z",
+    "wall_clock_sec": 166.0,
+    "transcript_guid": "876bf239-e8a0-4819-98a8-011cd7ebe3f8",
+    "token_metrics": {
+      "turns": 36,
+      "dialogue_tokens": 15370,
+      "schema_tokens": 13680,
+      "total_tokens": 29050
+    },
+    "test_results": {
+      "visible": {
+        "exit_code": 0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "summary": "5 passed in 0.24s"
+      },
+      "hidden": {
+        "exit_code": 0,
+        "passed": 16,
+        "failed": 0,
+        "total": 16,
+        "summary": "16 passed in 2.99s"
+      }
+    }
+  },
+  {
+    "arm": "caveagents_v4",
+    "trial_idx": 10,
+    "timestamp": "2026-09-25T04:33:28Z",
+    "wall_clock_sec": 129.0,
+    "transcript_guid": "a13b5c34 / 4f072958",
+    "token_metrics": {
+      "turns": 92,
+      "dialogue_tokens": 32842,
+      "schema_tokens": 34960,
+      "total_tokens": 67802,
+      "subagents": {
+        "foundation": {
+          "guid": "a13b5c34-7914-4da1-ab68-1aa15a9db1cb",
+          "turns": 36,
+          "dialogue_tokens": 13601,
+          "schema_tokens": 13680,
+          "total_tokens": 27281
+        },
+        "executor": {
+          "guid": "4f072958-71cc-4ebd-9861-5bf340e9c293",
+          "turns": 56,
+          "dialogue_tokens": 19241,
+          "schema_tokens": 21280,
+          "total_tokens": 40521
+        }
+      }
+    },
+    "test_results": {
+      "visible": {
+        "exit_code": 0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "summary": "5 passed in 0.24s"
+      },
+      "hidden": {
+        "exit_code": 0,
+        "passed": 16,
+        "failed": 0,
+        "total": 16,
+        "summary": "16 passed in 3.00s"
+      }
+    }
+  },
+  {
+    "arm": "caveagents_v4",
+    "trial_idx": 9,
+    "timestamp": "2026-09-25T04:33:41Z",
+    "wall_clock_sec": 142.0,
+    "transcript_guid": "a5bf10b7 / 182c3de9",
+    "token_metrics": {
+      "turns": 108,
+      "dialogue_tokens": 39929,
+      "schema_tokens": 41040,
+      "total_tokens": 80969,
+      "subagents": {
+        "foundation": {
+          "guid": "a5bf10b7-e5e7-43b4-9db1-0fc53b14f423",
+          "turns": 34,
+          "dialogue_tokens": 12518,
+          "schema_tokens": 12920,
+          "total_tokens": 25438
+        },
+        "executor": {
+          "guid": "182c3de9-481d-44d6-b47d-1c5927e449ce",
+          "turns": 74,
+          "dialogue_tokens": 27411,
+          "schema_tokens": 28120,
+          "total_tokens": 55531
+        }
+      }
+    },
+    "test_results": {
+      "visible": {
+        "exit_code": 0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "summary": "5 passed in 0.24s"
+      },
+      "hidden": {
+        "exit_code": 0,
+        "passed": 16,
+        "failed": 0,
+        "total": 16,
+        "summary": "16 passed in 2.99s"
+      }
+    }
+  },
+  {
+    "arm": "caveagents_v4",
+    "trial_idx": 8,
+    "timestamp": "2026-09-25T04:34:15Z",
+    "wall_clock_sec": 176.0,
+    "transcript_guid": "6577de3f / 8637ef79",
+    "token_metrics": {
+      "turns": 104,
+      "dialogue_tokens": 39805,
+      "schema_tokens": 39520,
+      "total_tokens": 79325,
+      "subagents": {
+        "foundation": {
+          "guid": "6577de3f-8d07-46b7-b78b-aef7ae9e327b",
+          "turns": 34,
+          "dialogue_tokens": 12599,
+          "schema_tokens": 12920,
+          "total_tokens": 25519
+        },
+        "executor": {
+          "guid": "8637ef79-eaa3-4671-83b1-20f3854aaf33",
+          "turns": 70,
+          "dialogue_tokens": 27206,
+          "schema_tokens": 26600,
+          "total_tokens": 53806
+        }
+      }
+    },
+    "test_results": {
+      "visible": {
+        "exit_code": 0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "summary": "5 passed in 0.24s"
+      },
+      "hidden": {
+        "exit_code": 0,
+        "passed": 16,
+        "failed": 0,
+        "total": 16,
+        "summary": "16 passed in 2.99s"
+      }
+    }
+  }
+]

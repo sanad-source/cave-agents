@@ -46,6 +46,25 @@ The following empirical benchmark measures estimated total token expenditure on 
 
 Detailed transcript GUIDs and per-turn token breakdowns are documented in [docs/BENCHMARKS.md](docs/BENCHMARKS.md).
 
+### Tier 2 Multi-File Service Benchmark ($N=20$, $n=10$ per Arm)
+
+We tested whether multi-agent teams amortize their overhead on a multi-file service (`taskflow`, 5 decoupled modules, ~500 LOC) across 20 automated trials ($n=10$ Pruned Monolith vs. $n=10$ CaveAgents v4) evaluated against 16 held-out adversarial tests:
+
+| Architecture ($n=10$) | Mean Tokens ± SD | Multiple vs Control | Wall-Clock Latency | Hidden Adversarial Pass Rate | Flawless Runs |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **Pruned Monolith Control** | **27,824 ± 5,440** | **1.00x** (Baseline) | **153.8s ± 30.6s** | 159 / 160 (99.38%) | 9 / 10 (90%) |
+| **CaveAgents v4 Team** | **85,782 ± 11,462** | **3.08x** (+208.3%) | **155.5s ± 29.2s** | **160 / 160 (100.00%)** | **10 / 10 (100%)** |
+
+<p align="center">
+  <img src="assets/chart_tier2_benchmark.png" alt="Tier 2 Multi-File Service Benchmark: Pruned Monolith vs. CaveAgents v4" width="100%"/>
+</p>
+
+- **Did the team win on tokens?** **NO.** Monolith was **3.08x cheaper** (27.8k vs 85.8k tokens).
+- **Did the team win on latency?** **NO.** Wall-clock execution was at **exact parity** (155.5s vs 153.8s, 1.01x).
+- **Did the team win on defect avoidance?** **MARGINAL.** 100.0% vs 99.4% (v4 avoided 1 thread-level timeout cancellation defect caught in Monolith Trial 08).
+
+See [docs/BENCHMARKS.md](docs/BENCHMARKS.md) for full trial records, token decompositions, and statistical distributions.
+
 ---
 
 ## 🏛️ Architecture
@@ -170,14 +189,12 @@ print(summary)
 ## 🗺️ Future Work & Research Roadmap
 
 - [x] **Pruned-Tool Monolith Control**: Benchmarked single-agent monolith with identical 5-tool pruned registry (**11,381 tokens**, 2.35x cheaper than v4 team).
+- [x] **Statistical Power ($n \ge 10$) & Tier 2 Medium Service Benchmark**: Completed $N=20$ trial empirical study ($n=10$ Pruned Monolith vs $n=10$ CaveAgents v4) on `taskflow` asynchronous multi-file service (~500 LOC across 5 modules). Monolith remained 3.08x cheaper (27.8k vs 85.8k tokens) at latency parity (153.8s vs 155.5s), while v4 team captured 1 marginal edge defect (100% vs 99.4% held-out test pass rate).
 - [ ] **Native API Billing Telemetry**: Extract exact billed input, output, and cached token metadata directly from Gemini API response headers.
-- [ ] **Statistical Power ($n \ge 10$)**: Run 10+ randomized trials per arm across varying temperatures to establish confidence intervals and variance bounds.
-- [ ] **Multi-Scale Task Evaluation**: Benchmark across 4 distinct task tiers:
-  - *Tier 1 (Micro)*: Single-class algorithmic component (TokenBucket).
-  - *Tier 2 (Medium)*: Multi-file service with database migrations and HTTP endpoints.
+- [ ] **Multi-Scale Task Evaluation (Tier 3 & 4)**:
   - *Tier 3 (Large)*: Cross-package refactoring with extensive dependencies.
   - *Tier 4 (Heterogeneous)*: Full-stack application with frontend UI, backend API, and unit tests.
-- [ ] **Independent Held-Out Testing**: Evaluate functional correctness against hidden test suites, mutation coverage, and security static analysis to measure if the reviewer stage catches real defects across broader domains.
+- [ ] **Independent Held-Out Mutation Testing**: Evaluate functional correctness against broader mutation coverage and security static analysis across diverse domains.
 
 ---
 
