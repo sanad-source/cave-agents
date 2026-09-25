@@ -59,6 +59,10 @@ We tested whether multi-agent teams amortize their overhead on a multi-file serv
   <img src="assets/chart_tier2_benchmark.png" alt="Tier 2 Multi-File Service Benchmark: Pruned Monolith vs. CaveAgents v4" width="100%"/>
 </p>
 
+<p align="center">
+  <img src="assets/chart_scaling_tiers.png" alt="Cross-Tier Coordination Tax Comparison" width="100%"/>
+</p>
+
 - **Did the team win on tokens?** **NO.** Monolith was **3.08x cheaper** (27.8k vs 85.8k tokens).
 - **Did the team win on latency?** **NO.** Wall-clock execution was at **exact parity** (155.5s vs 153.8s, 1.01x).
 - **Did the team win on defect avoidance?** **MARGINAL.** 100.0% vs 99.4% (v4 avoided 1 thread-level timeout cancellation defect caught in Monolith Trial 08).

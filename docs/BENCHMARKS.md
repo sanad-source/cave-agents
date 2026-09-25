@@ -179,3 +179,19 @@ All 20 trials were executed live under automated harness control. Transcripts an
 <p align="center">
   <img src="../assets/chart_tier2_benchmark.png" alt="Tier 2 Multi-File Service Benchmark" width="100%"/>
 </p>
+
+### Cross-Tier Scaling Analysis (Tier 1 vs. Tier 2)
+<p align="center">
+  <img src="../assets/chart_scaling_tiers.png" alt="Cross-Tier Coordination Tax Comparison" width="100%"/>
+</p>
+
+### Tier 2 Token Expenditure Decomposition (Dialogue vs. Schema)
+<p align="center">
+  <img src="../assets/chart_token_breakdown_tier2.png" alt="Tier 2 Token Expenditure Decomposition" width="100%"/>
+</p>
+
+### Latency vs. Token Expenditure Trade-off (Cost-Time Frontier)
+<p align="center">
+  <img src="../assets/chart_pareto_latency_cost.png" alt="Tier 2 Latency vs Token Expenditure" width="100%"/>
+</p>
+
