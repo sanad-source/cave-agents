@@ -121,16 +121,25 @@ To investigate whether multi-agent teams amortize their coordination overhead on
 
 ### Key Empirical Findings
 
-1. **Did the team win on token expenditure? NO.**
+1. **Did the team win on token expenditure? NO (3.08x Multi-Agent Tax).**
    - CaveAgents v4 was **3.08x more expensive (+208.3% tokens)** than the Pruned Monolith Control (85,782 vs 27,824 tokens).
    - Even when dividing work across decoupled modules, each worker subagent incurred redundant prompt initialization, duplicate spec ingestion, and independent tool turn loops. Coordination tax scaled super-linearly with worker count.
-2. **Did the team win on wall-clock execution latency? NO.**
+   - **Directionality of Accounting Bias**: Both tiers use modeled tool schema constants (~380 tokens/turn for 5 tools) without provider prefix caching discounts or full cumulative conversation history re-sent on every turn. Because the monolith accumulates a single deep context across 30–50 turns while the team splits into shorter subagent sessions, offline step parsing undercounts the monolith's cumulative re-sent history more than the team's. Consequently, **the true token gap under live API billing is likely narrower than 3.08x, not wider**.
+
+2. **Did the team win on wall-clock execution latency? NO (Functional Serialization Disguised as Concurrency).**
    - Latency was at exact parity: **1.01x ratio** (155.5s for v4 vs 153.8s for monolith).
-   - Any wall-clock concurrency advantages achieved by generating `models`/`storage`/`queue` in parallel with `executor`/`service` were entirely cancelled out by subagent initialization overhead, turn dispatch roundtrips, and cross-worker interface synchronization.
-3. **Did the team win on defect avoidance? MARGINAL (+0.62%).**
+   - **Transcript Audit of Concurrency**: Although both workers were spawned concurrently in the DAG, `executor.py` had a hard semantic dependency on `models.py`, `storage.py`, and `queue.py`. Transcript audits (e.g. `11039d9e` in Trial 04) reveal that the Executor worker spent turns 3 through 41 polling the filesystem (`ls -la taskflow`, `sleep 2`) waiting for Foundation to write `models.py`. 
+   - **Crucial Finding**: This was **functionally serialized execution**, not genuine parallel independent generation. Wall-clock latency parity (155.5s vs 153.8s) occurred because the downstream worker was blocked on upstream data-flow dependencies, completely eliminating the theoretical concurrency advantage of multi-agent teams on this task.
+
+3. **Did the team win on defect avoidance? MARGINAL (+0.62% on Hidden Tests).**
    - CaveAgents v4 achieved 10/10 perfect runs (160/160 hidden adversarial tests passed, 0 defects).
-   - Pruned Monolith achieved 9/10 perfect runs (159/160 hidden tests passed). The single defect occurred in Trial 08, where the monolith missed thread-level cancellation in `test_hidden_timeout_abortion`.
-   - While the team captured this defect, it cost **57,958 additional tokens per run** to achieve that 0.62% margin.
+   - Pruned Monolith achieved 9/10 perfect runs (159/160 hidden tests passed).
+   - **Exact Defect in Trial 08 (`test_hidden_timeout_abortion`)**: The monolith implemented `WorkerPool` without enforcing thread-level timeout cancellation on slow jobs. When a 2.0s sleeping job was submitted with `timeout=0.1s`, the worker pool let it block rather than terminating it and setting `JobStatus.FAILED` with a timeout notice. When `get_job_result(timeout=2.0s)` was called, it raised `TimeoutError` instead of catching `RuntimeError("timeout exceeded")`.
+   - While the team avoided this bug across all 10 runs, it cost **57,958 additional tokens per run** to achieve that 0.62% edge.
+
+4. **Team Topology Difference: 2-Agent Split (No Reviewer).**
+   - Note that Tier 2 evaluated a **2-worker division of labor** (`foundation` + `executor`), unlike the 3-agent pipeline (`QA` → `Coder` → `Reviewer`) in Tier 1.
+   - The dedicated reviewer stage was omitted to test pure modular division of labor. Thus, the 3.08x token tax measures the overhead of partitioning just two implementation roles; adding a dedicated third reviewer agent would have driven the tax even higher (projected at 4.5x–5x).
 
 ---
 

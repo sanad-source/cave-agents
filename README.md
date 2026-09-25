@@ -65,9 +65,10 @@ We tested whether multi-agent teams amortize their overhead on a multi-file serv
   <img src="assets/chart_scaling_tiers.png" alt="Cross-Tier Coordination Tax Comparison" width="100%"/>
 </p>
 
-- **Did the team win on tokens?** **NO.** Monolith was **3.08x cheaper** (27.8k vs 85.8k tokens).
-- **Did the team win on latency?** **NO.** Wall-clock execution was at **exact parity** (155.5s vs 153.8s, 1.01x).
-- **Did the team win on defect avoidance?** **MARGINAL.** 100.0% vs 99.4% (v4 avoided 1 thread-level timeout cancellation defect caught in Monolith Trial 08).
+- **Did the team win on tokens?** **NO.** Monolith was **3.08x cheaper** (27.8k vs 85.8k tokens). *Directional bias note*: offline step accounting undercounts the monolith's cumulative re-sent history across 30–50 turns more than the team's separate contexts, meaning the true token gap under live API billing is likely narrower than 3.08x.
+- **Did the team win on latency?** **NO.** Wall-clock execution was at **exact parity** (155.5s vs 153.8s, 1.01x). *Transcript audit finding*: execution was **functionally serialized** because `executor.py` had a hard dependency on `models.py`. The Executor worker spent turns 3–41 polling the filesystem until the Foundation worker finished, cancelling out parallel generation speedups.
+- **Did the team win on defect avoidance?** **MARGINAL.** 100.0% vs 99.4% (v4 avoided 1 thread-level timeout cancellation defect in Trial 08, where the monolith failed `test_hidden_timeout_abortion` by letting a slow handler block rather than aborting at timeout).
+- **Topology Note (2-Agent Split, No Reviewer)**: Tier 2 benchmarked a 2-worker division of labor (`foundation` + `executor`), omitting the dedicated 3rd reviewer subagent used in Tier 1. Thus, 3.08x measures the cost of partitioning implementation alone; a 3-agent pipeline would increase this overhead further.
 
 See [docs/BENCHMARKS.md](docs/BENCHMARKS.md) for full trial records, token decompositions, and statistical distributions.
 
