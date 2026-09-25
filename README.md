@@ -45,7 +45,7 @@ Multi-agent teams expend **2.35x to 13.62x more tokens** than an identical prune
 | AgentTeams | 154,998 | 13.62x | 3-Agent Team, 16 Tools | — |
 
 <p align="center">
-  <img src="assets/chart_tokens.png" alt="Tier 1 Token Comparison" width="90%"/>
+  <img src="assets/chart_tokens.png?v=2" alt="Tier 1 Token Comparison" width="90%"/>
 </p>
 
 ### Tier 2: Multi-File Asynchronous Service (`taskflow`, $N=20$, $n=10$ per Arm)
@@ -56,10 +56,10 @@ Multi-agent teams expend **2.35x to 13.62x more tokens** than an identical prune
 | **CaveAgents v4-lite (2-Worker, No Review)** | **85,782 ± 11,462** | 81,602 | **155.5s ± 29.2s** | **160 / 160 (100.00%)** | 10 / 10 |
 
 <p align="center">
-  <img src="assets/chart_tier2_benchmark.png" alt="Tier 2 Boxplot & Latency" width="95%"/>
+  <img src="assets/chart_tier2_benchmark.png?v=2" alt="Tier 2 Boxplot & Latency" width="95%"/>
 </p>
 <p align="center">
-  <img src="assets/chart_scaling_tiers.png" alt="Cross-Tier Scaling Tax" width="95%"/>
+  <img src="assets/chart_scaling_tiers.png?v=2" alt="Cross-Tier Scaling Tax" width="95%"/>
 </p>
 
 *Complete trial logs, per-turn schema breakdowns, and raw transcript GUIDs: [docs/BENCHMARKS.md](docs/BENCHMARKS.md).*
