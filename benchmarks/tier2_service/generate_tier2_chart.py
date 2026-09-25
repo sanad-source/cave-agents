@@ -50,6 +50,7 @@ bp1["boxes"][1].set_facecolor(COLOR_V4)
 bp1["boxes"][1].set_alpha(0.85)
 
 # Overlay individual trial points
+np.random.seed(42)
 for i, tokens in enumerate([mono_tokens, v4_tokens]):
     x = np.random.normal(i + 1, 0.04, size=len(tokens))
     ax1.plot(x, tokens, "o", color="#0f172a", alpha=0.7, markersize=6)
