@@ -120,6 +120,9 @@ cp -r skills/caveagents ~/.gemini/antigravity/skills/
 ```
 In any session prompt: `Activate CaveAgents v4 mode.`
 
+### Standalone System Prompt
+To use CaveAgents v4 with **DeepSeek**, **Claude**, or **ChatGPT**, paste [**PROMPT.md**](PROMPT.md) into the model's system prompt or custom instructions.
+
 ---
 
 ## 🔬 Limitations & Methodology

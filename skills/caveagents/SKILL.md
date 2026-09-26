@@ -39,6 +39,7 @@ Detailed definitions in [references/roles.md](references/roles.md):
 
 ## Reference Specifications
 
+- [Standalone System Prompt (DeepSeek / LLMs)](PROMPT.md)
 - [Architecture Reference](../../docs/ARCHITECTURE.md)
 - [Version 1: Serial Pipeline](references/CAVEAGENTS_V1.md)
 - [Version 2: Clones & P2P Direct Comms](references/CAVEAGENTS_V2.md)
