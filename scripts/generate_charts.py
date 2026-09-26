@@ -101,8 +101,14 @@ def generate_benchmark_chart() -> Path:
 def main() -> None:
     print(f"Generating verified empirical charts into {ASSETS_DIR}...")
     generate_benchmark_chart()
+    try:
+        from generate_output_token_chart import generate_output_tokens_chart
+        generate_output_tokens_chart()
+    except Exception as e:
+        print(f"Could not generate output token chart: {e}")
     print("Chart generation complete.")
 
 
 if __name__ == "__main__":
     main()
+

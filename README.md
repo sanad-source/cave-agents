@@ -62,6 +62,19 @@ Multi-agent teams expend **2.35x to 13.62x more tokens** than an identical prune
   <img src="assets/chart_scaling_tiers.png?v=2" alt="Cross-Tier Scaling Tax" width="95%"/>
 </p>
 
+### Output Token Generation Comparison Across Tiers
+
+Direct model output generation (excluding prompt schemas and conversational inputs) tracks the raw generation burden across architectures:
+
+| Benchmark Tier | Pruned Monolith Control | CaveAgents Teams | Team / Control Ratio | Multi-Agent Context |
+| :--- | :---: | :---: | :---: | :--- |
+| **Tier 1: Rate Limiter** (91 LOC, $n=1$) | **2,100** tokens | **3,400** tokens (v4, 3 agents) | **1.62x** | +61.9% vs Control (-68.7% vs Standard Teamwork: 10,853) |
+| **Tier 2: Async Service** (~500 LOC, $n=10$) | **13,799 ± 2,873** | **41,429 ± 5,784** (v4-lite, 2 agents) | **3.00x** | +200.2% output tax (serial data-flow handoff) |
+
+<p align="center">
+  <img src="assets/chart_output_tokens.png?v=1" alt="Output Token Comparison Across Tiers" width="100%"/>
+</p>
+
 *Complete trial logs, per-turn schema breakdowns, and raw transcript GUIDs: [docs/BENCHMARKS.md](docs/BENCHMARKS.md).*
 
 ---

@@ -229,3 +229,32 @@ All 20 trials were executed live under automated harness control. Transcripts an
   <img src="../assets/chart_pareto_latency_cost.png" alt="Tier 2 Latency vs Token Expenditure" width="100%"/>
 </p>
 
+### Output Token Generation Comparison Across Tiers
+
+Tracking raw model output generation isolates the code and reasoning generation burden from prompt schemas and environment context inputs:
+
+#### Tier 1 Output Token Comparison (All 9 Architectures)
+| Architecture / Framework | Output Tokens | Multiple vs Pruned Control (1.00x) | Delta (%) | Architecture Type |
+| :--- | :---: | :---: | :---: | :--- |
+| **Pruned Mono (Control)** | **2,100** | **1.00x** | Baseline | Single-Agent (5 Tools) |
+| **Caveman Mono** | **2,380** | 1.13x | +13.3% | Single-Agent (16 Tools, Terse) |
+| **CaveAgents v4** | **3,400** | **1.62x** | **+61.9%** | **3-Agent Team (5 Tools)** |
+| **CaveAgents v3** | 4,395 | 2.09x | +109.3% | 3-Agent Team (16 Tools) |
+| **Standard Mono** | 4,572 | 2.18x | +117.7% | Single-Agent (16 Tools, Verbose) |
+| **CaveAgents v2** | 5,672 | 2.70x | +170.1% | 3-Agent Team (16 Tools) |
+| **CaveAgents v1** | 7,744 | 3.69x | +268.8% | 3-Agent Team (16 Tools) |
+| **AgentTeams** | 8,881 | 4.23x | +322.9% | 3-Agent Team (16 Tools) |
+| **Standard Teamwork (Live)** | 10,853 | 5.17x | +416.8% | 3-Agent Team (16 Tools) |
+
+#### Tier 2 Output Token Distribution ($N=20$, $n=10$ per Arm)
+| Metric | Pruned Monolith Control ($n=10$) | CaveAgents v4-lite Team ($n=10$) | Ratio (Team / Mono) | Delta (%) |
+| :--- | :---: | :---: | :---: | :---: |
+| **Output Tokens (Mean ± SD)** | **13,798.8 ± 2,872.7** | **41,429.1 ± 5,783.8** | **3.00x** | **+200.2%** |
+| Output Tokens (Median) | 12,544.5 | 39,114.5 | 3.12x | +211.8% |
+| Output Tokens (Range) | [10,713 – 20,670] | [31,775 – 51,755] | — | — |
+
+<p align="center">
+  <img src="../assets/chart_output_tokens.png" alt="Output Token Generation Comparison Across Tiers" width="100%"/>
+</p>
+
+
